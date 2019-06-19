@@ -1,14 +1,15 @@
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 
-object SparkApp extends App{
+object SparkApp {
 
+  def main(args: Array[String]): Unit = {
   println("Application started...")
 
   val conf = new SparkConf().setAppName("spark-custom-datasource")
   val spark = SparkSession.builder().config(conf).master("local").getOrCreate()
 
-  val df = spark.sqlContext.read.format("datasourceV1").load("hdfs://hadoop1.example.com:8020/user/admin/test.ber")
+  val df = spark.sqlContext.read.format("asn1").load("hdfs://hadoop1.example.com:8020/user/admin/test.ber")
 
   //print the schema
    df.printSchema()
@@ -31,4 +32,5 @@ object SparkApp extends App{
 
   println("Application Ended...")
 
+  }
 }
