@@ -23,7 +23,7 @@ import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
   * Created by rana on 29/9/16.
   */
 class CustomDatasourceRelation(override val sqlContext : SQLContext, path : String, userSchema : StructType)
-  extends BaseRelation with TableScan with Serializable {
+  extends BaseRelation with TableScan with  PrunedScan with Serializable {
 
   override def schema: StructType = {
     if (userSchema != null) {
@@ -85,6 +85,57 @@ rd.foreach(x=>print("array size  : ---------------------------------------------
 
 
   }
+
+
+  override def buildScan(requiredColumns: Array[String]): RDD[Row] = {
+    println("PrunedScan: buildScan called...")
+
+    val schemaFields = schema.fields
+
+
+    val conf: Configuration = new Configuration(sqlContext.sparkContext.hadoopConfiguration)
+    System.out.println("tessssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssst")
+    val rdd1: RDD[(LongWritable, Text)] = sqlContext.sparkContext.newAPIHadoopFile("hdfs://hadoop1.example.com:8020/user/admin/test.ber", classOf[RawFileAsBinaryInputFormat], classOf[LongWritable], classOf[Text], conf)
+
+    ///////////////////////
+
+    val  rdd3:RDD[String] = rdd1.map(x=>x._2.toString)
+    //println("cooooooooooooooooooooooooooounnnntttttttttttt"+rdd3.count())
+
+    val rd = rdd3.map((x: Any) => {
+      def foo(x: Any) = {
+        println(x)
+        val is = new ByteArrayInputStream(x.asInstanceOf[String].getBytes)
+        val asnin: ASN1InputStream = new ASN1InputStream(is)
+        var obj : ASN1Primitive = null
+        var thisCdr : CallDetailRecord= null
+        var arr= Array[Any]()
+        while ({obj = asnin.readObject;obj!=null}) {
+          println("*****************************************************************************************************************"+arr.length)
+          thisCdr = new CallDetailRecord(obj.asInstanceOf[ASN1Sequence])
+          System.out.println("CallDetailRecord " + thisCdr.getRecordNumber + " Calling " + thisCdr.getCallingNumber + " Called " + thisCdr.getCalledNumber + " Start Date-Time " + thisCdr.getStartDate + "-" + thisCdr.getStartTime + " duration " + thisCdr.getDuration)
+          arr=arr :+ Seq(thisCdr.getRecordNumber,thisCdr.getCallingNumber,thisCdr.getCalledNumber,thisCdr.getStartDate,thisCdr.getStartTime,thisCdr.getDuration)
+        }
+        asnin.close()
+        arr.zipWithIndex.map({case (value, index) =>
+          val colName = schemaFields(index).name
+          val castedValue = value
+          if (requiredColumns.contains(colName)) Some(castedValue) else None})
+        println("outttttttttttttttttt")
+        val cdr2 = new CallDetailRecord2(thisCdr.getRecordNumber, thisCdr.getCallingNumber, thisCdr.getCalledNumber, thisCdr.getStartDate, thisCdr.getStartTime, thisCdr.getDuration)
+        arr.map(s => Row.fromSeq(s.asInstanceOf[Seq[Any]].filter(_!=None)))
+      }
+
+      //println("Row length =    "+Row(foo(x)).length)
+      println("array size   : "+foo(x))
+      foo(x)
+
+    })
+    rd.foreach(x=>print("array size  : ------------------------------------------------------"+x.length))
+    rd.flatMap(x=>x)
+
+  }
+
 
 
 }

@@ -15,7 +15,7 @@ object SparkApp {
    df.printSchema()
 
   //print the data
-   df.show()
+   //df.show()
 
   //save the data
   //  df.write.options(Map("format" -> "customFormat")).mode(SaveMode.Overwrite).format("io.dcengines.rana.datasource").save("out_custom/")
@@ -23,8 +23,8 @@ object SparkApp {
   //  df.write.mode(SaveMode.Overwrite).format("io.dcengines.rana.datasource").save("out_none/")
 
   //select some specific columns
-  //  df.createOrReplaceTempView("test")
-  //  spark.sql("select id, name, salary from test").show()
+    df.createOrReplaceTempView("test")
+    spark.sql("select Duration,StartDate from test").show()
 
   //filter data
 //  df.createOrReplaceTempView("test")
