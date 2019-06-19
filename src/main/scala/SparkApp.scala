@@ -11,7 +11,7 @@ object SparkApp extends App{
   val df = spark.sqlContext.read.format("datasourceV1").load("hdfs://hadoop1.example.com:8020/user/admin/test.ber")
 
   //print the schema
-  // df.printSchema()
+   df.printSchema()
 
   //print the data
    df.show()
