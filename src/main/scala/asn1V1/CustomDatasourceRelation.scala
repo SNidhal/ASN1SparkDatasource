@@ -1,4 +1,4 @@
-package asn1
+package asn1V1
 
 import java.io.{ByteArrayInputStream, InputStream}
 import java.util.List
@@ -109,7 +109,7 @@ rd.foreach(x=>print("array size  : ---------------------------------------------
         val asnin: ASN1InputStream = new ASN1InputStream(is)
         var obj : ASN1Primitive = null
         var thisCdr : CallDetailRecord= null
-        var arr= Array[Any]()
+        var arr= Array[Seq[Any]]()
         while ({obj = asnin.readObject;obj!=null}) {
           println("*****************************************************************************************************************"+arr.length)
           thisCdr = new CallDetailRecord(obj.asInstanceOf[ASN1Sequence])
@@ -123,7 +123,7 @@ rd.foreach(x=>print("array size  : ---------------------------------------------
           if (requiredColumns.contains(colName)) Some(castedValue) else None})
         println("outttttttttttttttttt")
         val cdr2 = new CallDetailRecord2(thisCdr.getRecordNumber, thisCdr.getCallingNumber, thisCdr.getCalledNumber, thisCdr.getStartDate, thisCdr.getStartTime, thisCdr.getDuration)
-        arr.map(s => Row.fromSeq(s.asInstanceOf[Seq[Any]].filter(_!=None)))
+        arr.map(s => Row.fromSeq(s.filter(_!=None)))
       }
 
       //println("Row length =    "+Row(foo(x)).length)
