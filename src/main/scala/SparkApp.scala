@@ -24,7 +24,7 @@ object SparkApp {
 
   //select some specific columns
     df.createOrReplaceTempView("test")
-    spark.sql("select Duration,StartDate from test").show()
+    spark.sql("select Duration,CallingNumber from test").show()
 
   //filter data
 //  df.createOrReplaceTempView("test")
