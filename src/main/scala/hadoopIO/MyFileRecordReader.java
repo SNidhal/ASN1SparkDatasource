@@ -42,25 +42,21 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
 
 
         while(postition<end){
-            System.out.println("while");
-            //fsin.seek(postition);
+
             int cmp=0;
             int i;
 
             fsin.seek(postition);
-            //System.out.println("fsin read :"+(fsin.read()!=50 )+"//// cmp + pos :"+ (cmp+postition>end-1));
             while( (i=fsin.readByte())!=-1 && fsin.getPos()<end){
                 cmp++;
                 if (cmp==2){
                     taille=i+fsin.getPos();
                 }
                 if(fsin.getPos()<=taille) {
-
-                    System.out.println("byte: " + i+ "----------- pos  :"+fsin.getPos()+"----------taille   :"+taille);
                     byte[] b = {(byte) i};
                     currentValue.append(b, 0, 1);
                 }else {
-                    System.out.println(i);
+
                     postition=taille;
                     return true;
                 }
@@ -72,15 +68,12 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
                 break;
             }
             postition=taille;
-           // System.out.println("new pos: "+postition+"+++++++++++ taille : "+taille);
         }
-        System.out.println("final positin ----- "+postition);
         if(postition==end) System.out.println("there is no spillage");
         else {
             int i;
             while( (i=fsin.readByte())!=-1  && fsin.getPos()==taille){
 
-                    System.out.println("byte: " + i+ "----------- pos  :"+fsin.getPos()+"----------taille   :"+taille);
                     byte[] b = {(byte) i};
                     currentValue.append(b, 0, 1);
 
@@ -120,21 +113,17 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
     public void initialize(InputSplit split, TaskAttemptContext context)
             throws IOException, InterruptedException {
         Configuration conf = context.getConfiguration();
-        /////////////////
+
         FileSplit isplit =(FileSplit) split;
 
         start=isplit.getStart();
         end =start+isplit.getLength();
 
-        /////////////////////////
-        System.out.println("start:"+start+"************ end: "+end);
-        //////////////////////////
+
         path = ((FileSplit) split).getPath();
         FileSystem fs = path.getFileSystem(conf);
         fsin = fs.open(path);
-        //System.out.println("pos :     ---------"+fsin.readByte());
-        //tessssssssssssssst
-        //boolean skipFirstRecord = false;
+
         if(start!=0){
             System.out.println("Skip first recored");
 
@@ -149,14 +138,14 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
         System.out.println("Dont Skip first recored");
 
     postition=start;
-        ////////////////////////////
+
 
     }
 
     @Override
     public void close() throws IOException {
-       // asnin.close();
-        //is.close();
+//        asnin.close();
+   //     is.close();
         if (fsin!=null) fsin.close();
     }
 
