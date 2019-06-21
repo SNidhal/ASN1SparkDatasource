@@ -69,8 +69,7 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
             }
             postition=taille;
         }
-        if(postition==end) System.out.println("there is no spillage");
-        else {
+        if(postition!=end)  {
             int i;
             while( (i=fsin.readByte())!=-1  && fsin.getPos()==taille){
 
@@ -125,7 +124,6 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
         fsin = fs.open(path);
 
         if(start!=0){
-            System.out.println("Skip first recored");
 
             int firstByte = fsin.readByte();
             int tempSize= fsin.readByte();
@@ -135,7 +133,6 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
 
         }
 
-        System.out.println("Dont Skip first recored");
 
     postition=start;
 

@@ -43,7 +43,6 @@ class CustomDatasourceRelation(override val sqlContext : SQLContext, path : Stri
 
 
   override def buildScan(): RDD[Row] = {
-    println("TableScan: buildScan called...")
 
 
     val conf: Configuration = new Configuration(sqlContext.sparkContext.hadoopConfiguration)
@@ -78,7 +77,6 @@ class CustomDatasourceRelation(override val sqlContext : SQLContext, path : Stri
 
 
   override def buildScan(requiredColumns: Array[String]): RDD[Row] = {
-    println("PrunedScan: buildScan called...")
 
     val schemaFields = schema.fields
 
@@ -109,7 +107,7 @@ class CustomDatasourceRelation(override val sqlContext : SQLContext, path : Stri
           if (requiredColumns.contains(colName)) Some(castedValue) else " "
         }))
 
-        arr.map(s => Row.fromSeq(s.filter(_!=" ")))
+        arr.map(s=>rearrange(requiredColumns,s)).map(s=>s.filter(_!=" ")).map(s => Row.fromSeq(s))
       }
 
 
@@ -119,21 +117,28 @@ class CustomDatasourceRelation(override val sqlContext : SQLContext, path : Stri
     rd.flatMap(x=>x)
 
   }
-def rearrange(order : Array[String],sq:Seq[Any]): Seq[Any] ={
-  val schemaFields = schema.fields
-  sq.zipWithIndex.map({
-    case (value, index) =>
-    val colName = schemaFields(index).name
-    val castedValue = value
-
-    val ind =order.indexOf(colName)
-    val temp= sq(ind)
-      sq.updated(ind,value)
-      sq.updated(index,temp)
-  })
 
 
-}
+  def rearrange(order : Array[String],sq:Seq[Any]): Seq[Any] ={
+    val schemaFields = schema.fields
+    val x=sq
+    var x3 : Seq[Any]=null
+    var x2=sq.map(x=>" ".asInstanceOf[Any])
+    sq.zipWithIndex.foreach({
+      case (value, index) =>
+        if(value!= " "){
+          val colName = schemaFields(index).name
+          order.foreach(x=>println(x))
+          println(colName)
+          val ind =order.indexOf(colName)
+          x2=x2.updated(ind,value)
+        }
+        value
+
+    })
+
+    x2
+  }
 
 
 }
