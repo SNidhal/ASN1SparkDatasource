@@ -6,7 +6,7 @@ import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{DataFrame, SQLContext, SaveMode}
 
 
-class DefaultSource extends RelationProvider with SchemaRelationProvider with CreatableRelationProvider {
+class DefaultSource extends RelationProvider with SchemaRelationProvider  {
   override def createRelation(sqlContext: SQLContext, parameters: Map[String, String]): BaseRelation = {
     createRelation(sqlContext, parameters, null)
   }
@@ -19,5 +19,4 @@ class DefaultSource extends RelationProvider with SchemaRelationProvider with Cr
     }
   }
 
-  override def createRelation(sqlContext: SQLContext, mode: SaveMode, parameters: Map[String, String], data: DataFrame): BaseRelation = ???
 }

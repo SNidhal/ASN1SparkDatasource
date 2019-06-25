@@ -5,18 +5,20 @@ object SparkApp {
 
   def main(args: Array[String]): Unit = {
 
-  val conf = new SparkConf().setAppName("spark-custom-datasource")
-  val spark = SparkSession.builder().config(conf).master("local").getOrCreate()
+    val asnFilePath = args(0)
+    val master = args(1)
 
-  val as1DataFrame = spark.sqlContext.read.format("asn1V1").load("test.ber")
+  val conf = new SparkConf().setAppName("spark-custom-datasource")
+  val spark = SparkSession.builder().config(conf).master(master).getOrCreate()
+
+  val as1DataFrame = spark.read.format("asn1V1").load(asnFilePath)
 
 
     as1DataFrame.printSchema()
 
 
     as1DataFrame.createOrReplaceTempView("test")
-    spark.sql("select callingNumber,Duration,recordNumber from test").show()
-
+    spark.sql("select callingNumber,Duration,recordNumber from test where Duration > 60").show()
 
 
   }

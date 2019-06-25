@@ -44,31 +44,30 @@ class CustomDatasourceRelation(override val sqlContext : SQLContext, path : Stri
 
 
     val conf: Configuration = new Configuration(sqlContext.sparkContext.hadoopConfiguration)
-    val rdd1: RDD[(LongWritable, Text)] = sqlContext.sparkContext.newAPIHadoopFile(path, classOf[RawFileAsBinaryInputFormat], classOf[LongWritable], classOf[Text], conf)
+    val FileRDD: RDD[(LongWritable, Text)] = sqlContext.sparkContext.newAPIHadoopFile(path, classOf[RawFileAsBinaryInputFormat], classOf[LongWritable], classOf[Text], conf)
 
 
-    val  rdd3:RDD[String] = rdd1.map(x=>x._2.toString)
+    val  encodedLinesRDD:RDD[String] = FileRDD.map(x=>x._2.toString)
 
-    val rd = rdd3.map((x: Any) => {
-      def foo(x: Any) = {
-        val is = new ByteArrayInputStream(x.asInstanceOf[String].getBytes)
-        val asnin: ASN1InputStream = new ASN1InputStream(is)
-        var obj : ASN1Primitive = null
-        var thisCdr : CallDetailRecord= null
-        var arr= Array[Row]()
-        while ({obj = asnin.readObject;obj!=null}) {
-          thisCdr = new CallDetailRecord(obj.asInstanceOf[ASN1Sequence])
-           arr=arr :+ Row.fromSeq(Seq(thisCdr.getRecordNumber,thisCdr.getCallingNumber,thisCdr.getCalledNumber,thisCdr.getStartDate,thisCdr.getStartTime,thisCdr.getDuration))
+    val decodedLinesRDD = encodedLinesRDD.map((encodedLine: Any) => {
+      def decodeLine(x: Any) = {
+        val inputStream = new ByteArrayInputStream(x.asInstanceOf[String].getBytes)
+        val asn1InputStream: ASN1InputStream = new ASN1InputStream(inputStream)
+        var asn1PrimitiveObject : ASN1Primitive = null
+        var callDetailRecord : CallDetailRecord= null
+        var rowArray= Array[Row]()
+        while ({asn1PrimitiveObject = asn1InputStream.readObject;asn1PrimitiveObject!=null}) {
+          callDetailRecord = new CallDetailRecord(asn1PrimitiveObject.asInstanceOf[ASN1Sequence])
+          rowArray=rowArray :+ Row.fromSeq(Seq(callDetailRecord.getRecordNumber,callDetailRecord.getCallingNumber,callDetailRecord.getCalledNumber,callDetailRecord.getStartDate,callDetailRecord.getStartTime,callDetailRecord.getDuration))
         }
-        asnin.close()
-        val cdr2 = new CallDetailRecord2(thisCdr.getRecordNumber, thisCdr.getCallingNumber, thisCdr.getCalledNumber, thisCdr.getStartDate, thisCdr.getStartTime, thisCdr.getDuration)
-        arr
+        asn1InputStream.close()
+        rowArray
       }
 
-      foo(x)
+      decodeLine(encodedLine)
 
     })
-  rd.flatMap(x=>x)
+    decodedLinesRDD.flatMap(x=>x)
 
 
   }
@@ -80,60 +79,63 @@ class CustomDatasourceRelation(override val sqlContext : SQLContext, path : Stri
 
 
     val conf: Configuration = new Configuration(sqlContext.sparkContext.hadoopConfiguration)
-    val rdd1: RDD[(LongWritable, Text)] = sqlContext.sparkContext.newAPIHadoopFile(path, classOf[RawFileAsBinaryInputFormat], classOf[LongWritable], classOf[Text], conf)
+    val FileRDD: RDD[(LongWritable, Text)] = sqlContext.sparkContext.newAPIHadoopFile(path, classOf[RawFileAsBinaryInputFormat], classOf[LongWritable], classOf[Text], conf)
 
 
 
-    val  rdd3:RDD[String] = rdd1.map(x=>x._2.toString)
+    val  encodedLinesRDD:RDD[String] = FileRDD.map(x=>x._2.toString)
 
-    val rd = rdd3.map((x: Any) => {
-      def foo(x: Any) = {
-        val is = new ByteArrayInputStream(x.asInstanceOf[String].getBytes)
-        val asnin: ASN1InputStream = new ASN1InputStream(is)
-        var obj : ASN1Primitive = null
-        var thisCdr : CallDetailRecord= null
-        var arr= Array[Seq[Any]]()
-        while ({obj = asnin.readObject;obj!=null}) {
-          thisCdr = new CallDetailRecord(obj.asInstanceOf[ASN1Sequence])
-          arr=arr :+ Seq(thisCdr.getRecordNumber.toString,thisCdr.getCallingNumber,thisCdr.getCalledNumber,thisCdr.getStartDate,thisCdr.getStartTime,thisCdr.getDuration.toString)
+    val decodedLinesRDD = encodedLinesRDD.map((x: Any) => {
+      def decodeLine(x: Any) = {
+        val inputStream = new ByteArrayInputStream(x.asInstanceOf[String].getBytes)
+        val asn1InputStream: ASN1InputStream = new ASN1InputStream(inputStream)
+        var asn1PrimitiveObject : ASN1Primitive = null
+        var callDetailRecord : CallDetailRecord= null
+        var rowArray= Array[Seq[Any]]()
+        while ({asn1PrimitiveObject = asn1InputStream.readObject;asn1PrimitiveObject!=null}) {
+          callDetailRecord = new CallDetailRecord(asn1PrimitiveObject.asInstanceOf[ASN1Sequence])
+          rowArray=rowArray :+ Seq(callDetailRecord.getRecordNumber.toString,callDetailRecord.getCallingNumber,callDetailRecord.getCalledNumber,callDetailRecord.getStartDate,callDetailRecord.getStartTime,callDetailRecord.getDuration.toString)
         }
-        asnin.close()
-        arr=arr.map(x=>x.zipWithIndex.map({case (value, index) =>
+        asn1InputStream.close()
+        rowArray=rowArray.map(x=>x.zipWithIndex.map({case (value, index) =>
           val colName = schemaFields(index).name
           val castedValue = value
 
           if (requiredColumns.contains(colName)) Some(castedValue) else " "
         }))
 
-        arr.map(s=>rearrange(requiredColumns,s)).map(s=>s.filter(_!=" ")).map(s => Row.fromSeq(s))
+        rowArray.map(s=>rearrangeSequence(requiredColumns,s)).map(s=>s.filter(_!=" ")).map(s => Row.fromSeq(s))
       }
 
 
-      foo(x)
+      decodeLine(x)
 
     })
-    rd.flatMap(x=>x)
+    decodedLinesRDD.flatMap(x=>x)
 
   }
 
 
-  def rearrange(order : Array[String],sq:Seq[Any]): Seq[Any] ={
+
+
+
+
+
+
+  def rearrangeSequence(order : Array[String],sequence:Seq[Any]): Seq[Any] ={
     val schemaFields = schema.fields
-    val x=sq
-    var x3 : Seq[Any]=null
-    var x2=sq.map(x=>" ".asInstanceOf[Any])
-    sq.zipWithIndex.foreach({
+
+    var blankSequence=sequence.map(x=>" ".asInstanceOf[Any])
+    sequence.zipWithIndex.foreach({
       case (value, index) =>
         if(value!= " "){
-          val colName = schemaFields(index).name
-          val ind =order.indexOf(colName)
-          x2=x2.updated(ind,value)
+          val columnName = schemaFields(index).name
+          val orderColumnIndex =order.indexOf(columnName)
+          blankSequence=blankSequence.updated(orderColumnIndex,value)
         }
-        value
-
     })
 
-    x2
+    blankSequence
   }
 
 
