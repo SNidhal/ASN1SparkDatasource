@@ -19,9 +19,7 @@ import hadoopIO.RawFileAsBinaryInputFormat
 import model.{CallDetailRecord, CallDetailRecord2}
 import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
 
-/**
-  * Created by rana on 29/9/16.
-  */
+
 class CustomDatasourceRelation(override val sqlContext : SQLContext, path : String, userSchema : StructType)
   extends BaseRelation with TableScan with  PrunedScan with Serializable {
 
@@ -128,8 +126,6 @@ class CustomDatasourceRelation(override val sqlContext : SQLContext, path : Stri
       case (value, index) =>
         if(value!= " "){
           val colName = schemaFields(index).name
-          order.foreach(x=>println(x))
-          println(colName)
           val ind =order.indexOf(colName)
           x2=x2.updated(ind,value)
         }
