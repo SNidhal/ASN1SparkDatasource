@@ -18,14 +18,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
-    private Path path;
-    private InputStream is;
-    private FSDataInputStream fsin;
-    private ASN1InputStream asnin;
-    private ASN1Primitive obj;
+    private Path filePath;
 
-    private long start,end,postition=0;
-    private LineReader in;
+    private FSDataInputStream fsin;
+
+
+    private long blockStartPosition,blockEndPosition,currentPosition=0;
+
 
     private  LongWritable currentKey=new LongWritable();
     private Text currentValue=new Text();
@@ -35,19 +34,19 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
     @Override
     public boolean nextKeyValue() throws IOException, InterruptedException {
 
-        currentKey.set(postition+1);
+        currentKey.set(currentPosition+1);
         currentValue.clear();
         int newSize=0;
         long taille =Integer.MAX_VALUE;
 
 
-        while(postition<end){
+        while(currentPosition<blockEndPosition){
 
             int cmp=0;
             int i;
 
-            fsin.seek(postition);
-            while( (i=fsin.readByte())!=-1 && fsin.getPos()<end){
+            fsin.seek(currentPosition);
+            while( (i=fsin.readByte())!=-1 && fsin.getPos()<blockEndPosition){
                 cmp++;
                 if (cmp==2){
                     taille=i+fsin.getPos();
@@ -57,7 +56,7 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
                     currentValue.append(b, 0, 1);
                 }else {
 
-                    postition=taille;
+                    currentPosition=taille;
                     return true;
                 }
             }
@@ -67,9 +66,9 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
           if(newSize==0){
                 break;
             }
-            postition=taille;
+            currentPosition=taille;
         }
-        if(postition!=end)  {
+        if(currentPosition!=blockEndPosition)  {
             int i;
             while( (i=fsin.readByte())!=-1  && fsin.getPos()==taille){
 
@@ -101,65 +100,62 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
 
     @Override
     public float getProgress() throws IOException, InterruptedException {
-        if(start==end){
+        if(blockStartPosition==blockEndPosition){
             return 0.0f;
         }else{
-            return Math.min(1.0f,(postition-start)/(float)(end-start));
+            return Math.min(1.0f,(currentPosition-blockStartPosition)/(float)(blockEndPosition-blockStartPosition));
         }
     }
 
     @Override
     public void initialize(InputSplit split, TaskAttemptContext context)
-            throws IOException, InterruptedException {
+            throws IOException {
+
         Configuration conf = context.getConfiguration();
 
-        FileSplit isplit =(FileSplit) split;
+        FileSplit localFileBlock =(FileSplit) split;
 
-        start=isplit.getStart();
-        end =start+isplit.getLength();
+        blockStartPosition=localFileBlock.getStart();
+        blockEndPosition =blockStartPosition+localFileBlock.getLength();
 
 
-        path = ((FileSplit) split).getPath();
-        FileSystem fs = path.getFileSystem(conf);
-        fsin = fs.open(path);
+        filePath = ((FileSplit) split).getPath();
+        FileSystem fileSystem = filePath.getFileSystem(conf);
+        fsin = fileSystem.open(filePath);
 
-        if(start!=0){
+        if(blockStartPosition!=0){
 
-            int firstByte = fsin.readByte();
-            int tempSize= fsin.readByte();
+            while(isRecordStart(48)==false);
 
-            while(isRecordStart(48)==false) System.out.println("not record start");
-            start=fsin.getPos();
+            blockStartPosition=fsin.getPos();
 
         }
 
 
-    postition=start;
+        currentPosition=blockStartPosition;
 
 
     }
 
     @Override
     public void close() throws IOException {
-//        asnin.close();
-   //     is.close();
         if (fsin!=null) fsin.close();
     }
 
 
 
-    public boolean isRecordStart( int stratingByte) throws IOException{
+    public boolean isRecordStart( int startingByte) throws IOException{
 
         int firstByte = fsin.readByte();
         int tempSize= fsin.readByte();
         long position=fsin.getPos();
 
 
-        if(firstByte==stratingByte){
+        if(firstByte==startingByte){
             fsin.seek(tempSize+fsin.getPos());
-            if(fsin.readByte()!= stratingByte){
+            if(fsin.readByte()!= startingByte){
                 fsin.seek(fsin.getPos()-1);
-                start =fsin.getPos();
+                blockStartPosition =fsin.getPos();
                 return true;
             }
 
@@ -167,7 +163,7 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
             fsin.seek(position+1);
             int i;
             while((i=fsin.readByte())!=-1){
-                if(i==stratingByte){
+                if(i==startingByte){
                     fsin.seek(fsin.getPos()-1);
                     break;
                 }

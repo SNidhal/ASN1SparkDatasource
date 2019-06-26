@@ -2,9 +2,7 @@ package util
 
 import org.apache.spark.sql.types.{DataType, IntegerType, LongType, StringType}
 
-/**
-  * Created by rana on 30/9/16.
-  */
+
 object Util {
   def castTo(value : String, dataType : DataType) = {
     dataType match {

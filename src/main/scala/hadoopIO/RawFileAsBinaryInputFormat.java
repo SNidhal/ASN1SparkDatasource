@@ -14,11 +14,6 @@ import java.io.IOException;
 public class RawFileAsBinaryInputFormat extends FileInputFormat<LongWritable,Text >  {
 
     @Override
-    protected boolean isSplitable(JobContext context, Path filename){
-        return true;
-    }
-
-    @Override
     public RecordReader<LongWritable , Text> createRecordReader(
             InputSplit split, TaskAttemptContext context) throws IOException,
             InterruptedException {
