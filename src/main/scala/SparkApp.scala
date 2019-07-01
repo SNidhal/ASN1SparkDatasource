@@ -16,9 +16,9 @@ object SparkApp {
 
     as1DataFrame.printSchema()
 
-
-    as1DataFrame.createOrReplaceTempView("test")
-    spark.sql("select callingNumber,Duration,recordNumber from test where Duration > 60").show()
+    as1DataFrame.show()
+//    as1DataFrame.createOrReplaceTempView("test")
+//    spark.sql("select callingNumber,Duration,recordNumber from test where Duration > 60").show()
 
 
   }

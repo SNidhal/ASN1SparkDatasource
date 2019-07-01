@@ -33,6 +33,12 @@
             <artifactId>scala-maven-plugin</artifactId>
             <version>4.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_2.12</artifactId>
+            <version>3.0.8</version>
+            <scope>test</scope>
+        </dependency>
 
 
     </dependencies>
