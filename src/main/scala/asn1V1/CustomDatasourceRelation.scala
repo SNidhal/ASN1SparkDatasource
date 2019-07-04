@@ -1,32 +1,31 @@
 package asn1V1
 
 import java.io.{ByteArrayInputStream, InputStream}
-import java.util.List
+
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{LongWritable, Text}
-import org.apache.spark.api.java.JavaPairRDD
-import org.apache.spark.api.java.function.Function
+
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.sources._
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.{Row, SQLContext}
-import org.bouncycastle.asn1.{ASN1InputStream, ASN1Primitive, ASN1Sequence}
+import org.bouncycastle.asn1.{ ASN1InputStream, ASN1Primitive, ASN1Sequence, DERTaggedObject, DLApplicationSpecific}
 import util.Util
-import java.util
 
+import compiler.InferSchema
 import hadoopIO.RawFileAsBinaryInputFormat
-import model.{CallDetailRecord, CallDetailRecord2}
-import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema
 
-case class CustomDatasourceRelation(override val sqlContext : SQLContext, path : String, userSchema : StructType)
+case class CustomDatasourceRelation(override val sqlContext : SQLContext, path : String, userSchema : StructType,defPath:String)
   extends BaseRelation with TableScan with  PrunedScan with Serializable {
+
+  val currentSchema:StructType =inferSchema(defPath)
 
   override def schema: StructType = {
     if (userSchema != null) {
       userSchema
     } else {
-      inferSchema
+      currentSchema
     }
   }
 
@@ -53,7 +52,7 @@ case class CustomDatasourceRelation(override val sqlContext : SQLContext, path :
 
   override def buildScan(requiredColumns: Array[String]): RDD[Row] = {
 
-    val schemaFields = schema.fields
+    val schemaFields = currentSchema.fields
 
 
     val conf: Configuration = new Configuration(sqlContext.sparkContext.hadoopConfiguration)
@@ -68,11 +67,9 @@ case class CustomDatasourceRelation(override val sqlContext : SQLContext, path :
         val inputStream = new ByteArrayInputStream(x.asInstanceOf[String].getBytes)
         val asn1InputStream: ASN1InputStream = new ASN1InputStream(inputStream)
         var asn1PrimitiveObject : ASN1Primitive = null
-        var callDetailRecord : CallDetailRecord= null
         var rowArray= Array[Seq[Any]]()
         while ({asn1PrimitiveObject = asn1InputStream.readObject;asn1PrimitiveObject!=null}) {
-          callDetailRecord = new CallDetailRecord(asn1PrimitiveObject.asInstanceOf[ASN1Sequence])
-          rowArray=rowArray :+ Seq(callDetailRecord.getRecordNumber.toString,callDetailRecord.getCallingNumber,callDetailRecord.getCalledNumber,callDetailRecord.getStartDate,callDetailRecord.getStartTime,callDetailRecord.getDuration.toString)
+          rowArray=rowArray :+ Util.asn1SequenceToSequence(asn1PrimitiveObject.asInstanceOf[ASN1Sequence])
         }
         asn1InputStream.close()
         rowArray=rowArray.map(x=>x.zipWithIndex.map({case (value, index) =>
@@ -82,7 +79,7 @@ case class CustomDatasourceRelation(override val sqlContext : SQLContext, path :
           if (requiredColumns.contains(colName)) Some(castedValue) else " "
         }))
 
-        rowArray.map(s=>Util.rearrangeSequence(requiredColumns,s,schema)).map(s=>s.filter(_!=" ")).map(s => Row.fromSeq(s))
+        rowArray.map(s=>Util.rearrangeSequence(requiredColumns,s,currentSchema)).map(s=>s.filter(_!=" ")).map(s => Row.fromSeq(s))
       }
 
 
@@ -93,30 +90,24 @@ case class CustomDatasourceRelation(override val sqlContext : SQLContext, path :
 
   }
 
-  private def inferSchema(): StructType = {
-    StructType(
-      StructField("recordNumber", StringType, false) ::
-        StructField("callingNumber", StringType, true) ::
-        StructField("calledNumber", StringType, true) ::
-        StructField("StartDate", StringType, true) ::
-        StructField("StartTime", StringType, true) ::
-        StructField("Duration", StringType, true) ::Nil
-
-    )
+  private def inferSchema(path:String): StructType = {
+    val res=InferSchema.getInferredSchema(path)
+    InferSchema.inferredSchema = new StructType
+    res
   }
 
-  def decodeRecord(line : Any) = {
-    val inputStream = new ByteArrayInputStream(line.asInstanceOf[String].getBytes)
+  def decodeRecord(encodedRocord : Any) = {
+    val inputStream = new ByteArrayInputStream(encodedRocord.asInstanceOf[String].getBytes)
     val asn1InputStream: ASN1InputStream = new ASN1InputStream(inputStream)
     var asn1PrimitiveObject : ASN1Primitive = null
-    var callDetailRecord : CallDetailRecord= null
-    var rowArray= Array[Row]()
+    var rowArray= Array[Seq[Any]]()
     while ({asn1PrimitiveObject = asn1InputStream.readObject;asn1PrimitiveObject!=null}) {
-      callDetailRecord = new CallDetailRecord(asn1PrimitiveObject.asInstanceOf[ASN1Sequence])
-      rowArray=rowArray :+ Row.fromSeq(Seq(callDetailRecord.getRecordNumber,callDetailRecord.getCallingNumber,callDetailRecord.getCalledNumber,callDetailRecord.getStartDate,callDetailRecord.getStartTime,callDetailRecord.getDuration))
+      println(asn1InputStream.read())
+      rowArray=rowArray :+ Util.asn1SequenceToSequence(asn1PrimitiveObject.asInstanceOf[ASN1Sequence])
     }
     asn1InputStream.close()
-    rowArray
+    rowArray.map(s => Row.fromSeq(s))
+
   }
 
 

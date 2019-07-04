@@ -1,5 +1,6 @@
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.types.{StringType, StructField, StructType}
 
 object SparkApp {
 
@@ -11,14 +12,16 @@ object SparkApp {
   val conf = new SparkConf().setAppName("spark-custom-datasource")
   val spark = SparkSession.builder().config(conf).master(master).getOrCreate()
 
-  val as1DataFrame = spark.read.format("asn1V1").load(asnFilePath)
+
+  val as1DataFrame = spark.read.format("asn1V1")
+                          .option("asnDefinitionPath","cdr.asn")
+                          .load(asnFilePath)
 
 
     as1DataFrame.printSchema()
 
-    as1DataFrame.show()
-//    as1DataFrame.createOrReplaceTempView("test")
-//    spark.sql("select callingNumber,Duration,recordNumber from test where Duration > 60").show()
+    as1DataFrame.createOrReplaceTempView("test")
+    spark.sql("select * from test where Duration > 60").show()
 
 
   }
