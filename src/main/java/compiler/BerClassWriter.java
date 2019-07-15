@@ -814,7 +814,7 @@ public class BerClassWriter {
                     );
                 }else if(element.className .equals("Integer")){
                     InferSchema.inferredSchema=InferSchema.inferredSchema.add(
-                            new StructField(cleanUpName(element.name), StringType, true, Metadata.empty())
+                            new StructField(cleanUpName(element.name), IntegerType, true, Metadata.empty())
 
 
                     );

@@ -10,17 +10,13 @@ import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
-import org.apache.hadoop.util.LineReader;
-import org.bouncycastle.asn1.ASN1InputStream;
-import org.bouncycastle.asn1.ASN1Primitive;
-
 import java.io.IOException;
-import java.io.InputStream;
 
 public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
+
     private Path filePath;
 
-    private FSDataInputStream fsin;
+    private FSDataInputStream fileSystemInputStream;
 
 
     private long blockStartPosition,blockEndPosition,currentPosition=0;
@@ -28,56 +24,55 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
 
     private  LongWritable currentKey=new LongWritable();
     private Text currentValue=new Text();
-    private boolean isProcessed = false;
 
 
     @Override
-    public boolean nextKeyValue() throws IOException, InterruptedException {
+    public boolean nextKeyValue() throws IOException {
 
-        currentKey.set(currentPosition+1);
+        currentKey.set(currentPosition);
         currentValue.clear();
-        int newSize=0;
-        long taille =Integer.MAX_VALUE;
+        int currentRecordSize=0;
+
+        long tempRecordSize =Integer.MAX_VALUE;
 
 
         while(currentPosition<blockEndPosition){
 
-            int cmp=0;
-            int i;
+            int localPosition=0;
+            int recordByte=0;
 
-            fsin.seek(currentPosition);
-            while( (i=fsin.readByte())!=-1 && fsin.getPos()<blockEndPosition){
-                cmp++;
-                if (cmp==2){
-                    taille=i+fsin.getPos();
+            fileSystemInputStream.seek(currentPosition);
+            while(fileSystemInputStream.getPos()<blockEndPosition){
+                recordByte=fileSystemInputStream.readByte();
+                localPosition++;
+                if (localPosition==2){
+                    tempRecordSize=recordByte+fileSystemInputStream.getPos();
                 }
-                if(fsin.getPos()<=taille) {
-                    byte[] b = {(byte) i};
+                if(fileSystemInputStream.getPos()<=tempRecordSize) {
+                    byte[] b = {(byte) recordByte};
                     currentValue.append(b, 0, 1);
                 }else {
 
-                    currentPosition=taille;
+                    currentPosition=tempRecordSize;
                     return true;
                 }
             }
-            byte[] b = {(byte) i};
-            currentValue.append(b, 0, 1);
-            newSize= (int) taille;
-          if(newSize==0){
+            currentRecordSize= (int) tempRecordSize;
+            if(currentRecordSize==0){
                 break;
-            }
-            currentPosition=taille;
+             }
+            currentPosition=tempRecordSize;
         }
         if(currentPosition!=blockEndPosition)  {
             int i;
-            while( (i=fsin.readByte())!=-1  && fsin.getPos()==taille){
+            while( (i=fileSystemInputStream.readByte())!=-1  && fileSystemInputStream.getPos()==tempRecordSize){
 
                     byte[] b = {(byte) i};
                     currentValue.append(b, 0, 1);
 
             }
         }
-        if(newSize==0){
+        if(currentRecordSize==0){
             currentKey=null;
             currentValue=null;
             return false;
@@ -89,17 +84,17 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
     }
 
     @Override
-    public LongWritable getCurrentKey() throws IOException, InterruptedException {
+    public LongWritable getCurrentKey()  {
         return currentKey;
     }
 
     @Override
-    public  Text getCurrentValue() throws IOException, InterruptedException {
+    public  Text getCurrentValue(){
         return currentValue;
     }
 
     @Override
-    public float getProgress() throws IOException, InterruptedException {
+    public float getProgress() {
         if(blockStartPosition==blockEndPosition){
             return 0.0f;
         }else{
@@ -121,13 +116,13 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
 
         filePath = ((FileSplit) split).getPath();
         FileSystem fileSystem = filePath.getFileSystem(conf);
-        fsin = fileSystem.open(filePath);
+        fileSystemInputStream = fileSystem.open(filePath);
 
         if(blockStartPosition!=0){
 
-            while(isRecordStart(48)==false);
+            while(!isRecordStart(48));
 
-            blockStartPosition=fsin.getPos();
+            blockStartPosition=fileSystemInputStream.getPos();
 
         }
 
@@ -139,32 +134,32 @@ public class MyFileRecordReader extends RecordReader<LongWritable ,Text >  {
 
     @Override
     public void close() throws IOException {
-        if (fsin!=null) fsin.close();
+        if (fileSystemInputStream!=null) fileSystemInputStream.close();
     }
 
 
 
-    public boolean isRecordStart( int startingByte) throws IOException{
+    private boolean isRecordStart( int startingByte) throws IOException{
 
-        int firstByte = fsin.readByte();
-        int tempSize= fsin.readByte();
-        long position=fsin.getPos();
+        int firstByte = fileSystemInputStream.readByte();
+        int tempSize= fileSystemInputStream.readByte();
+        long position=fileSystemInputStream.getPos();
 
 
         if(firstByte==startingByte){
-            fsin.seek(tempSize+fsin.getPos());
-            if(fsin.readByte()!= startingByte){
-                fsin.seek(fsin.getPos()-1);
-                blockStartPosition =fsin.getPos();
+            fileSystemInputStream.seek(tempSize+fileSystemInputStream.getPos());
+            if(fileSystemInputStream.readByte()!= startingByte){
+                fileSystemInputStream.seek(fileSystemInputStream.getPos()-1);
+                blockStartPosition =fileSystemInputStream.getPos();
                 return true;
             }
 
         }else{
-            fsin.seek(position+1);
+            fileSystemInputStream.seek(position+1);
             int i;
-            while((i=fsin.readByte())!=-1){
+            while((i=fileSystemInputStream.readByte())!=-1){
                 if(i==startingByte){
-                    fsin.seek(fsin.getPos()-1);
+                    fileSystemInputStream.seek(fileSystemInputStream.getPos()-1);
                     break;
                 }
             }

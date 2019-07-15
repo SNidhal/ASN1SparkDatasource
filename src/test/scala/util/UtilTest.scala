@@ -8,7 +8,7 @@ import org.scalatest.{FlatSpec, GivenWhenThen, Matchers}
 
 class UtilTest extends FlatSpec with GivenWhenThen with Matchers {
 
-  val sch = StructType(
+  val schema = StructType(
     StructField("recordNumber", StringType, false) ::
       StructField("callingNumber", StringType, true) ::
       StructField("calledNumber", StringType, true) ::
@@ -27,7 +27,7 @@ class UtilTest extends FlatSpec with GivenWhenThen with Matchers {
 
     When("rearrangeSequence is invoked")
 
-    val resultSequence = Util.rearrangeSequence(order, initialSequence, sch)
+    val resultSequence = Util.rearrangeSequence(order, initialSequence, schema)
 
     Then("a rearranged sequence in the given order should be returned")
     resultSequence should equal(rearrangedSequence)

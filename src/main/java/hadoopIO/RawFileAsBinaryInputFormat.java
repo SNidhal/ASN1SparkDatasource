@@ -13,8 +13,7 @@ public class RawFileAsBinaryInputFormat extends FileInputFormat<LongWritable,Tex
 
     @Override
     public RecordReader<LongWritable , Text> createRecordReader(
-            InputSplit split, TaskAttemptContext context) throws IOException,
-            InterruptedException {
+            InputSplit split, TaskAttemptContext context)  {
         return new MyFileRecordReader();
     }
 }

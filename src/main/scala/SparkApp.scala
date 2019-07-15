@@ -14,14 +14,13 @@ object SparkApp {
 
 
   val as1DataFrame = spark.read.format("asn1V1")
-                          .option("asnDefinitionPath","cdr.asn")
-                          .load(asnFilePath)
-
+                          .option("asnDefinitionPath","TestMostSimple (1).asn")
+                          .load("TestMostSimple (1).ber")
 
     as1DataFrame.printSchema()
 
     as1DataFrame.createOrReplaceTempView("test")
-    spark.sql("select * from test where Duration > 60").show()
+    spark.sql("select * from test").show()
 
 
   }

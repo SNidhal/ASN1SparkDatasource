@@ -1,9 +1,8 @@
 package asn1V1
 
-import org.apache.hadoop.fs.Path
-import org.apache.spark.sql.sources.{BaseRelation, CreatableRelationProvider, RelationProvider, SchemaRelationProvider}
+import org.apache.spark.sql.sources.{BaseRelation, RelationProvider, SchemaRelationProvider}
 import org.apache.spark.sql.types.StructType
-import org.apache.spark.sql.{DataFrame, SQLContext, SaveMode}
+import org.apache.spark.sql.SQLContext
 
 
 class DefaultSource extends RelationProvider with SchemaRelationProvider  {
@@ -15,7 +14,7 @@ class DefaultSource extends RelationProvider with SchemaRelationProvider  {
     val path = parameters.get("path")
     val defFilePath = parameters.get("asnDefinitionPath")
     path match {
-      case Some(p)  => CustomDatasourceRelation(sqlContext, p, schema,defFilePath.get)
+      case Some(p)  => ASN1DatasourceRelation(sqlContext, p, schema,defFilePath.get)
       case _ => throw new IllegalArgumentException("Path is required for custom-datasource format!!")
     }
   }
