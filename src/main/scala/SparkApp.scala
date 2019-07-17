@@ -21,6 +21,7 @@ object SparkApp {
 
     as1DataFrame.createOrReplaceTempView("test")
     spark.sql("select * from test").show()
+    println(as1DataFrame.rdd.partitions.length+"  partitions")
 
 
   }

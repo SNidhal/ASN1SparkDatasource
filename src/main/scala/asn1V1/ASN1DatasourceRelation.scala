@@ -10,8 +10,8 @@ import util.Util
 import compiler.InferSchema
 import hadoopIO.RawFileAsBinaryInputFormat
 
-case class ASN1DatasourceRelation(override val sqlContext : SQLContext, path : String, userSchema : StructType, defPath:String)
-  extends BaseRelation with TableScan with  PrunedScan with Serializable {
+case class ASN1DatasourceRelation(override val sqlContext: SQLContext, path: String, userSchema: StructType, defPath: String)
+  extends BaseRelation with TableScan with PrunedScan with Serializable {
 
 
   override def schema: StructType = {
@@ -31,11 +31,11 @@ case class ASN1DatasourceRelation(override val sqlContext : SQLContext, path : S
     val FileRDD: RDD[(LongWritable, Text)] = sqlContext.sparkContext
       .newAPIHadoopFile(path, classOf[RawFileAsBinaryInputFormat], classOf[LongWritable], classOf[Text], conf)
 
-    val  encodedRecordsRDD:RDD[Text] = FileRDD.map(x=>x._2)
+    val encodedRecordsRDD: RDD[Text] = FileRDD.map(x => x._2)
 
     val decodedRecordsRDD = encodedRecordsRDD.map((encodedLine: Text) => {
 
-      Asn1Parser.decodeRecord(encodedLine,"GenericCallDataRecord",schema)
+      Asn1Parser.decodeRecord(encodedLine, "GenericCallDataRecord", schema)
 
     })
     decodedRecordsRDD.map(s => Row.fromSeq(s))
@@ -46,27 +46,26 @@ case class ASN1DatasourceRelation(override val sqlContext : SQLContext, path : S
   override def buildScan(requiredColumns: Array[String]): RDD[Row] = {
 
     val conf: Configuration = new Configuration(sqlContext.sparkContext.hadoopConfiguration)
-    conf.set("mapred.max.split.size","11")
-    val FileRDD: RDD[(LongWritable, Text)] = sqlContext.sparkContext.newAPIHadoopFile(path, classOf[RawFileAsBinaryInputFormat], classOf[LongWritable], classOf[Text], conf)
+    conf.set("mapred.max.split.size", "5")
+    val FileRDD: RDD[(LongWritable, Text)] = sqlContext.sparkContext
+      .newAPIHadoopFile(path, classOf[RawFileAsBinaryInputFormat], classOf[LongWritable], classOf[Text], conf)
 
 
+    val encodedLinesRDD: RDD[Text] = FileRDD.map(x => x._2)
 
-    val  encodedLinesRDD:RDD[Text] = FileRDD.map(x=>x._2)
+    val decodedLinesRDD = encodedLinesRDD.map(encodedLine => Asn1Parser.decodeRecord(encodedLine, "Human", schema))
 
-    val decodedLinesRDD = encodedLinesRDD.map(encodedLine => Asn1Parser.decodeRecord(encodedLine,"Human",schema))
-
-    val filteredDecodedLinesRDD = decodedLinesRDD.map(s=>Util.rearrangeSequence(requiredColumns,s,schema)).map(s=>s.filter(_!=" ")).map(s => Row.fromSeq(s))
+    val filteredDecodedLinesRDD = decodedLinesRDD.map(s => Util.rearrangeSequence(requiredColumns, s, schema)).map(s => s.filter(_ != " ")).map(s => Row.fromSeq(s))
 
     filteredDecodedLinesRDD
 
   }
 
-  private def inferSchema(path:String): StructType = {
-    val inferredSchema=InferSchema.getInferredSchema(path)
+  private def inferSchema(path: String): StructType = {
+    val inferredSchema = InferSchema.getInferredSchema(path)
     InferSchema.inferredSchema = new StructType
     inferredSchema
   }
-
 
 
 }
