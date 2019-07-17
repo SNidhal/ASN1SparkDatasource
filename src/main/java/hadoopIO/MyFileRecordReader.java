@@ -45,7 +45,6 @@ public class MyFileRecordReader extends RecordReader<LongWritable, Text> {
             fileSystemInputStream.seek(currentPosition);
             while (fileSystemInputStream.getPos() < blockEndPosition) {
                 recordByte = fileSystemInputStream.readByte();
-                System.out.println("byte  : " + recordByte + "  position : " + fileSystemInputStream.getPos());
                 localPosition++;
                 if (localPosition == 2) {
                     tempRecordSize = recordByte + fileSystemInputStream.getPos();
@@ -67,10 +66,8 @@ public class MyFileRecordReader extends RecordReader<LongWritable, Text> {
         }
         if (currentPosition != blockEndPosition && tempRecordSize != Integer.MAX_VALUE) {
             int i;
-            System.out.println(fileSystemInputStream.getPos() + "**********" + tempRecordSize);
             while (fileSystemInputStream.getPos() < tempRecordSize) {
                 i = fileSystemInputStream.readByte();
-                System.out.println("byte spill : " + i + "  position : " + fileSystemInputStream.getPos());
                 byte[] b = {(byte) i};
                 currentValue.append(b, 0, 1);
 
@@ -127,9 +124,7 @@ public class MyFileRecordReader extends RecordReader<LongWritable, Text> {
         if (blockStartPosition != 0) {
             fileSystemInputStream.seek(blockStartPosition);
             findRecordStart();
-            //while (!isRecordStart(48)) ;
             blockStartPosition = findRecordStart();
-            System.out.println("blockStartPosition " + blockStartPosition);
             if (blockStartPosition != -1) fileSystemInputStream.seek(blockStartPosition);
             else blockStartPosition = blockEndPosition;
         }
@@ -146,66 +141,23 @@ public class MyFileRecordReader extends RecordReader<LongWritable, Text> {
     }
 
 
-    private boolean isRecordStart(int startingByte) throws IOException {
-        if (fileSystemInputStream.getPos() < blockEndPosition) {
-
-            if (blockStartPosition + 1 == blockEndPosition) {
-                fileSystemInputStream.seek(blockEndPosition);
-                return true;
-            }
-
-            int firstByte = fileSystemInputStream.readByte();
-            int tempSize = fileSystemInputStream.readByte();
-            long position = fileSystemInputStream.getPos();
-            System.out.println(fileSystemInputStream.getPos() + " ++++++++++ " + blockEndPosition);
-
-            if (firstByte == startingByte) {
-                fileSystemInputStream.seek(tempSize + fileSystemInputStream.getPos());
-                if (fileSystemInputStream.readByte() != startingByte) {
-                    fileSystemInputStream.seek(fileSystemInputStream.getPos() - 1);
-                    blockStartPosition = fileSystemInputStream.getPos();
-                    return true;
-                }
-
-            } else {
-                fileSystemInputStream.seek(position + 1);
-                int i;
-                while (fileSystemInputStream.getPos() < blockEndPosition) {
-                    i = fileSystemInputStream.readByte();
-                    if (i == startingByte) {
-                        fileSystemInputStream.seek(fileSystemInputStream.getPos() - 1);
-                        break;
-                    }
-                }
-                return false;
-
-            }
-            return false;
-
-        }
-        return true;
-    }
 
     private int findRecordStart() throws IOException {
-        int i = 0;
-        for (i = (int) blockStartPosition; i < blockEndPosition; i++) {
-            fileSystemInputStream.seek(i);
+        int position = 0;
+        for (position = (int) blockStartPosition; position < blockEndPosition; position++) {
+            fileSystemInputStream.seek(position);
             int startByte = fileSystemInputStream.readByte();
             if (startByte == 48) {
-                System.out.println("48 position  " + fileSystemInputStream.getPos());
-                fileSystemInputStream.seek(i + 1);
-                int size = fileSystemInputStream.readByte();
-                if (fileSystemInputStream.getPos() + size == blockEndPosition) {
-                    System.out.println("end");
-                    return i;
+                fileSystemInputStream.seek(position + 1);
+                int sizeByte = fileSystemInputStream.readByte();
+                if (fileSystemInputStream.getPos() + sizeByte == blockEndPosition) {
+                    return position;
                 } else {
                     try {
-                        fileSystemInputStream.seek(fileSystemInputStream.getPos() + size);
+                        fileSystemInputStream.seek(fileSystemInputStream.getPos() + sizeByte);
                         int nextByte = fileSystemInputStream.readByte();
-                        System.out.println("next byte  : " + nextByte);
                         if (nextByte == 48) {
-                            System.out.println("start " + i);
-                            return i;
+                            return position;
                         }
                     }catch (EOFException e){
                         return -1;
