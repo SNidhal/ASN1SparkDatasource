@@ -28,8 +28,14 @@ import java.util.List;
 public class Compiler {
 
   public static final String VERSION = "1.11.3-SNAPSHOT";
+  public static String GeneratedClassFullPath;
+
 
   public static void main(String[] args) throws Exception {
+
+
+
+
 
     StringCliParameter outputBaseDir =
         new CliParameterBuilder("-o")
@@ -93,19 +99,19 @@ public class Compiler {
       cliParser.parseArguments(args);
     } catch (CliParseException e1) {
       System.err.println("Error parsing command line parameters: " + e1.getMessage());
-      System.out.println(cliParser.getUsageString());
+     // System.out.println(cliParser.getUsageString());
       System.exit(1);
     }
 
-    System.out.println("Generated code will be saved in " + outputBaseDir.getValue());
+   // System.out.println("Generated code will be saved in " + outputBaseDir.getValue());
     if (supportIndefiniteLength.isSelected()) {
-      System.out.println("Java classes will support decoding indefinite length.");
+      //System.out.println("Java classes will support decoding indefinite length.");
     }
 
     HashMap<String, AsnModule> modulesByName = new HashMap<>();
 
     for (String asn1File : asn1Files.getValue()) {
-      System.out.println("Parsing \"" + asn1File + "\"");
+     // System.out.println("Parsing \"" + asn1File + "\"");
       AsnModel model = getJavaModelFromAsn1File(asn1File);
       modulesByName.putAll(model.modulesByName);
     }
@@ -121,7 +127,7 @@ public class Compiler {
             disableWritingVersion.isSelected());
 
     classWriter.translate();
-    System.out.println("done");
+   // System.out.println("done");
   }
 
   private static AsnModel getJavaModelFromAsn1File(String inputFileName) throws Exception {

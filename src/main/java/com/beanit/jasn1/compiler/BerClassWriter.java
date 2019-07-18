@@ -160,7 +160,7 @@ public class BerClassWriter {
 
   public void translateModule(AsnModule module) throws IOException {
 
-    System.out.println("Generating classes for module \"" + module.moduleIdentifier.name + "\"");
+   // System.out.println("Generating classes for module \"" + module.moduleIdentifier.name + "\"");
 
     outputDirectory =
         new File(
@@ -2701,6 +2701,11 @@ public class BerClassWriter {
             + basePackageName
             + sanitizeModuleName(module.moduleIdentifier.name).replace('-', '.').toLowerCase()
             + ";\n");
+
+
+    Compiler.GeneratedClassFullPath=basePackageName
+            + sanitizeModuleName(module.moduleIdentifier.name).replace('-', '.').toLowerCase()+
+            "."+typeName;
 
     write("import java.io.IOException;");
     write("import java.io.EOFException;");

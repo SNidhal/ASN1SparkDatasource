@@ -1,5 +1,6 @@
 package asn1V1
 
+import com.beanit.jasn1.compiler.Compiler
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{LongWritable, Text}
 import org.apache.spark.rdd.RDD
@@ -14,13 +15,23 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, path: Str
   extends BaseRelation with TableScan with PrunedScan with Serializable {
 
 
-  override def schema: StructType = {
+  var currentSchema : StructType = _
+
+  {
+    val generatedSrcDir = "src/main/java-gen"
+    val rootPackageName = "GeneratedClasses"
+    val args = Array[String]("-o", generatedSrcDir, "-p", rootPackageName, "-f", defPath, "-dv")
+    Compiler.main(args)
+
     if (userSchema != null) {
-      userSchema
+      currentSchema =userSchema
     } else {
-      inferSchema(defPath)
+      currentSchema =inferSchema(defPath)
     }
   }
+
+
+  override def schema: StructType = currentSchema
 
 
   override def buildScan(): RDD[Row] = {
@@ -35,7 +46,7 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, path: Str
 
     val decodedRecordsRDD = encodedRecordsRDD.map((encodedLine: Text) => {
 
-      Asn1Parser.decodeRecord(encodedLine, "GenericCallDataRecord", schema)
+      Asn1Parser.decodeRecord(encodedLine, "GenericCallDataRecord", currentSchema)
 
     })
     decodedRecordsRDD.map(s => Row.fromSeq(s))
@@ -46,16 +57,16 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, path: Str
   override def buildScan(requiredColumns: Array[String]): RDD[Row] = {
 
     val conf: Configuration = new Configuration(sqlContext.sparkContext.hadoopConfiguration)
-    conf.set("mapred.max.split.size", "5")
+    conf.set("mapred.max.split.size", "100")
     val FileRDD: RDD[(LongWritable, Text)] = sqlContext.sparkContext
       .newAPIHadoopFile(path, classOf[RawFileAsBinaryInputFormat], classOf[LongWritable], classOf[Text], conf)
 
 
     val encodedLinesRDD: RDD[Text] = FileRDD.map(x => x._2)
 
-    val decodedLinesRDD = encodedLinesRDD.map(encodedLine => Asn1Parser.decodeRecord(encodedLine, "Human", schema))
+    val decodedLinesRDD = encodedLinesRDD.map(encodedLine => Asn1Parser.decodeRecord(encodedLine, Compiler.GeneratedClassFullPath, currentSchema))
 
-    val filteredDecodedLinesRDD = decodedLinesRDD.map(s => Util.rearrangeSequence(requiredColumns, s, schema)).map(s => s.filter(_ != " ")).map(s => Row.fromSeq(s))
+    val filteredDecodedLinesRDD = decodedLinesRDD.map(s => Util.rearrangeSequence(requiredColumns, s, currentSchema)).map(s => s.filter(_ != " ")).map(s => Row.fromSeq(s))
 
     filteredDecodedLinesRDD
 
@@ -63,7 +74,7 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, path: Str
 
   private def inferSchema(path: String): StructType = {
     val inferredSchema = InferSchema.getInferredSchema(path)
-    InferSchema.inferredSchema = new StructType
+   // InferSchema.inferredSchema = new StructType
     inferredSchema
   }
 

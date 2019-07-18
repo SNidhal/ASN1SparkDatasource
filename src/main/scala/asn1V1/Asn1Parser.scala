@@ -11,7 +11,7 @@ object Asn1Parser {
   def decodeRecord(record: Text, className: String, schema: StructType): Seq[Any] = {
     val lineInputStream = new ByteArrayInputStream(record.getBytes)
 
-    val generatedClassInstance  = Class.forName("util."+className).newInstance
+    val generatedClassInstance  = Class.forName(className).newInstance
 
     val decodeMethod =generatedClassInstance.getClass.getMethod("test",lineInputStream.getClass)
 
