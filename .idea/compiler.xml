@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Annotation profile for spark-asn1-datasource" enabled="true">
+        <sourceOutputDir name="src/generated/java" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="ASN1SparkDatasourceV13" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ASN1SparkDatasourceV13" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

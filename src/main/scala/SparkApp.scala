@@ -14,8 +14,8 @@ object SparkApp {
 
 
   val as1DataFrame = spark.read.format("asn1V1")
-                          .option("asnDefinitionPath","humanAnon.asn")
-                          .load("humanAnon.ber")
+                          .option("asnDefinitionPath","cdr.asn")
+                          .load(asnFilePath)
 
     as1DataFrame.printSchema()
 
