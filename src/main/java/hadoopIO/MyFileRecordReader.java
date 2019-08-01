@@ -67,6 +67,7 @@ public class MyFileRecordReader extends RecordReader<LongWritable, Text> {
         if (currentPosition != blockEndPosition && tempRecordSize != Integer.MAX_VALUE) {
             int i;
             while (fileSystemInputStream.getPos() < tempRecordSize) {
+
                 i = fileSystemInputStream.readByte();
                 byte[] b = {(byte) i};
                 currentValue.append(b, 0, 1);
@@ -141,7 +142,6 @@ public class MyFileRecordReader extends RecordReader<LongWritable, Text> {
     }
 
 
-
     private int findRecordStart() throws IOException {
         int position = 0;
         for (position = (int) blockStartPosition; position < blockEndPosition; position++) {
@@ -159,7 +159,7 @@ public class MyFileRecordReader extends RecordReader<LongWritable, Text> {
                         if (nextByte == 48) {
                             return position;
                         }
-                    }catch (EOFException e){
+                    } catch (EOFException e) {
                         return -1;
                     }
                 }

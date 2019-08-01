@@ -12,9 +12,10 @@ class DefaultSource extends RelationProvider with SchemaRelationProvider  {
 
   override def createRelation(sqlContext: SQLContext, parameters: Map[String, String], schema: StructType): BaseRelation = {
     val path = parameters.get("path")
-    val defFilePath = parameters.get("asnDefinitionPath")
+    val schemaFilePath = parameters.get("schemaFilePath")
+    val schemaFileType = parameters.get("schemaFileType")
     path match {
-      case Some(p)  => ASN1DatasourceRelation(sqlContext, p, schema,defFilePath.get)
+      case Some(p)  => ASN1DatasourceRelation(sqlContext,schemaFileType.get, p, schema,schemaFilePath.get)
       case _ => throw new IllegalArgumentException("Path is required for custom-datasource format!!")
     }
   }
