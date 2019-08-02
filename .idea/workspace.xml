@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="35a8d6d9-c86a-4271-9e5d-48d5a638eba2" name="Default Changelist" comment="">
+    <list default="true" id="35a8d6d9-c86a-4271-9e5d-48d5a638eba2" name="Default Changelist" comment="legacy code">
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__antlr_antlr_2_7_7.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__aopalliance_aopalliance_1_0.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__backport_util_concurrent_backport_util_concurrent_3_1.xml" afterDir="false" />
@@ -258,7 +258,6 @@
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__xml_apis_xml_apis_1_3_04.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__xmlenc_xmlenc_0_52.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hadoopIO/MyFileRecordReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hadoopIO/MyFileRecordReader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/SparkApp.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/SparkApp.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/asn1V1/ASN1DatasourceRelation.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/asn1V1/ASN1DatasourceRelation.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/asn1V1/Asn1Parser.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/asn1V1/Asn1Parser.scala" afterDir="false" />
@@ -337,8 +336,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/java/hadoopIO/MyFileRecordReaderSpec.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="211">
-              <caret line="36" column="45" selection-start-line="36" selection-start-column="45" selection-end-line="36" selection-end-column="45" />
+            <state relative-caret-position="143">
+              <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
               <folding>
                 <element signature="e#18#58#0" expanded="true" />
               </folding>
@@ -812,7 +811,7 @@
       <workItem from="1564578106915" duration="2475000" />
       <workItem from="1564647137581" duration="19548000" />
       <workItem from="1564677050252" duration="8061000" />
-      <workItem from="1564731595817" duration="9815000" />
+      <workItem from="1564731595817" duration="10051000" />
     </task>
     <task id="LOCAL-00001" summary="change bouncy castle to jasn1 with unary test for decoding">
       <created>1563194699638</created>
@@ -856,7 +855,14 @@
       <option name="project" value="LOCAL" />
       <updated>1564657331907</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Fix splitting error">
+      <created>1564742309771</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1564742309771</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -892,7 +898,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="216399000" />
+    <option name="totallyTimeSpent" value="216635000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -943,7 +949,8 @@
     <MESSAGE value="generated class example and jasn1 compiler test" />
     <MESSAGE value="automatic class generation and dynamic loading" />
     <MESSAGE value="legacy code" />
-    <option name="LAST_COMMIT_MESSAGE" value="legacy code" />
+    <MESSAGE value="Fix splitting error" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix splitting error" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/bar.asn">
@@ -1250,8 +1257,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/hadoopIO/MyFileRecordReaderSpec.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="36" column="45" selection-start-line="36" selection-start-column="45" selection-end-line="36" selection-end-column="45" />
+        <state relative-caret-position="143">
+          <caret line="32" lean-forward="true" selection-start-line="32" selection-end-line="32" />
           <folding>
             <element signature="e#18#58#0" expanded="true" />
           </folding>

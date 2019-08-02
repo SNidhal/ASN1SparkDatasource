@@ -1,15 +1,13 @@
 package util
 
-import java.io.UnsupportedEncodingException
-import java.util
 
-import org.apache.spark.sql.types.{DataType, DataTypes, IntegerType, LongType, StringType, StructField, StructType}
-import org.bouncycastle.asn1.{ASN1Encodable, ASN1Primitive, ASN1Sequence, DLApplicationSpecific}
+
+import org.apache.spark.sql.types.{DataType, IntegerType, LongType, StringType, StructType}
 
 
 object Util {
 
-  def castTo(value: String, dataType: DataType) = {
+  def castTo(value: String, dataType: DataType):Any = {
     dataType match {
       case _: IntegerType => value.toInt
       case _: LongType => value.toLong
@@ -20,7 +18,6 @@ object Util {
 
   def rearrangeSequence(order: Array[String], sequence: Seq[Any], sh: StructType): Seq[Any] = {
     val schemaFields = sh.fields
-    schemaFields.foreach(x => println(x.name))
     var blankSequence = sequence.map(x => " ".asInstanceOf[Any])
     sequence.zipWithIndex.foreach({
       case (value, index) =>
@@ -31,6 +28,9 @@ object Util {
     })
     blankSequence
   }
+
+
+
 
 
 }

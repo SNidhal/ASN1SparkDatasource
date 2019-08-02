@@ -15,12 +15,15 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
 
 
   var currentSchema: StructType = _
+  var initialSchema: StructType =_
 
   {
     if (userSchema != null) {
       currentSchema = StructType(Asn1Parser.flatten(userSchema))
+      initialSchema=userSchema
     } else {
       currentSchema = inferSchema(schemaFilePath)
+      initialSchema=currentSchema
     }
   }
 
@@ -42,11 +45,11 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
 
   override def buildScan(requiredColumns: Array[String]): RDD[Row] = {
     val conf: Configuration = new Configuration(sqlContext.sparkContext.hadoopConfiguration)
-    //conf.set("mapred.max.split.size", "40000")
+    conf.set("mapred.max.split.size", "50000")
     val FileRDD: RDD[(LongWritable, Text)] = sqlContext.sparkContext
       .newAPIHadoopFile(path, classOf[RawFileAsBinaryInputFormat], classOf[LongWritable], classOf[Text], conf)
     val encodedLinesRDD: RDD[Text] = FileRDD.map(x => x._2)
-    val decodedLinesRDD = encodedLinesRDD.map(encodedLine => Asn1Parser.decodeRecord(encodedLine, currentSchema,false))
+    val decodedLinesRDD = encodedLinesRDD.map(encodedLine => Asn1Parser.decodeRecord(encodedLine, initialSchema,true))
     val filteredDecodedLinesRDD = decodedLinesRDD
       .map(s => Util.rearrangeSequence(requiredColumns, s, currentSchema))
       .map(s => s.filter(_ != " "))

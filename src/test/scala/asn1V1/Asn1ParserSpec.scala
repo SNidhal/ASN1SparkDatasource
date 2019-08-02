@@ -21,7 +21,6 @@ class Asn1ParserSpec extends FlatSpec with GivenWhenThen with Matchers {
         StructField("startDate", StringType, true) ::
         StructField("startTime", StringType, true) ::
         StructField("duration", IntegerType, true) :: Nil
-
     )
 
 

@@ -16,18 +16,21 @@ object SparkApp {
     val schema = StructType(
       StructField("foo", StructType(StructField("bar", IntegerType, true) :: Nil), false) ::
         StructField("name", StringType, true) ::
-        StructField("age", StringType, true) :: Nil
+        StructField("age", IntegerType, true) :: Nil
     )
 
     val as1DataFrame = spark.read.format("asn1V1")
+      .schema(schema)
       .option("schemaFileType","asn")
-      .option("schemaFilePath", "cdr.asn")
-      .load("test.ber")
+      .option("schemaFilePath", "humanAnon.asn")
+      .load("humanAnon.ber")
 
     as1DataFrame.printSchema()
 
     as1DataFrame.createOrReplaceTempView("test")
-    spark.sql("select * from test").count()
+    spark.sql("select * from test").show()
+
+    println(spark.sql("select * from test").count()+" records")
     println(as1DataFrame.rdd.partitions.length + "  partitions")
 
     Thread.sleep(100000000)
