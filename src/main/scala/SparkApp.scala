@@ -20,10 +20,10 @@ object SparkApp {
     )
 
     val as1DataFrame = spark.read.format("asn1V1")
-      .schema(schema)
+      //.schema(schema)
       .option("schemaFileType","asn")
-      .option("schemaFilePath", "humanAnon.asn")
-      .load("humanAnon.ber")
+      .option("schemaFilePath", "cdr.asn")
+      .load("test2.ber")
 
     as1DataFrame.printSchema()
 
