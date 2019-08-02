@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="35a8d6d9-c86a-4271-9e5d-48d5a638eba2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/ASN1SparkDatasourceV1.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__antlr_antlr_2_7_7.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__aopalliance_aopalliance_1_0.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__backport_util_concurrent_backport_util_concurrent_3_1.xml" afterDir="false" />
@@ -259,24 +257,13 @@
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__xerces_xercesImpl_2_9_1.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__xml_apis_xml_apis_1_3_04.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__xmlenc_xmlenc_0_52.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java-gen/GeneratedClasses/genericcdr/schema/GenericCallDataRecord.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/beanit/jasn1/compiler/BerClassWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/beanit/jasn1/compiler/BerClassWriter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/beanit/jasn1/compiler/Compiler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/beanit/jasn1/compiler/Compiler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/hadoopIO/MyFileRecordReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hadoopIO/MyFileRecordReader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/SparkApp.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/SparkApp.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/asn1V1/ASN1DatasourceRelation.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/asn1V1/ASN1DatasourceRelation.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/asn1V1/Asn1Parser.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/asn1V1/Asn1Parser.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/asn1V1/DefaultSource.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/asn1V1/DefaultSource.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/util/GenericCallDataRecord.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/util/Human.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/util/Util.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/util/Util.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/scala/asn1V1/Asn1ParserSpec.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/scala/asn1V1/Asn1ParserSpec.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/scala/util/UtilTest.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/scala/util/UtilTest.scala" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -291,22 +278,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/asn1V1/ASN1DatasourceRelation.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="48" column="78" selection-start-line="48" selection-start-column="78" selection-end-line="48" selection-end-column="78" />
-              <folding>
-                <element signature="e#16#59#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/util/Util.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="23" selection-start-line="23" selection-end-line="23" />
+            <state relative-caret-position="340">
+              <caret line="20" selection-start-line="20" selection-end-line="20" />
             </state>
           </provider>
         </entry>
@@ -314,8 +289,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/scala/util/UtilTest.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="239">
-              <caret line="17" column="3" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="17" selection-end-column="3" />
+            <state relative-caret-position="-34">
+              <caret line="16" column="13" lean-forward="true" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
               <folding>
                 <element signature="e#14#49#0" expanded="true" />
               </folding>
@@ -326,8 +301,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/asn1V1/Asn1Parser.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="36" lean-forward="true" selection-start-line="36" selection-end-line="36" />
+            <state>
+              <caret line="14" column="67" lean-forward="true" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="67" />
               <folding>
                 <element signature="e#16#66#0" expanded="true" />
               </folding>
@@ -338,8 +313,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/hadoopIO/MyFileRecordReader.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1664">
-              <caret line="47" selection-start-line="47" selection-end-line="47" />
+            <state relative-caret-position="228">
+              <caret line="151" column="29" selection-start-line="151" selection-start-column="15" selection-end-line="151" selection-end-column="29" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -348,15 +323,48 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/humanAnon.asn">
-          <provider selected="true" editor-type-id="text-editor" />
+        <entry file="file://$PROJECT_DIR$/src/test/scala/SparkTest.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
+              <folding>
+                <element signature="e#0#33#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/java/hadoopIO/MyFileRecordReaderSpec.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="211">
+              <caret line="36" column="45" selection-start-line="36" selection-start-column="45" selection-end-line="36" selection-end-column="45" />
+              <folding>
+                <element signature="e#18#58#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/util/SeekableByteArrayInputStream.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-484">
+              <caret line="17" column="5" lean-forward="true" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#338#339#0" expanded="true" />
+                <element signature="e#364#365#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/SparkApp.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
-              <caret line="15" column="28" lean-forward="true" selection-start-line="15" selection-start-column="28" selection-end-line="15" selection-end-column="28" />
+            <state relative-caret-position="238">
+              <caret line="35" column="22" selection-start-line="35" selection-start-column="22" selection-end-line="35" selection-end-column="22" />
               <folding>
                 <element signature="e#0#33#0" expanded="true" />
               </folding>
@@ -365,10 +373,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/beanit/jasn1/ber/internal/Util.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java-gen/com/beanit/jasn1/compiler/parser/ASNParser.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="93">
-              <caret line="29" column="14" selection-start-line="29" selection-start-column="14" selection-end-line="29" selection-end-column="14" />
+            <state relative-caret-position="255">
+              <caret line="217" column="12" selection-start-line="217" selection-start-column="12" selection-end-line="217" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -376,20 +384,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/scala/asn1V1/Asn1ParserSpec.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="325">
-              <caret line="35" column="68" selection-start-line="35" selection-start-column="68" selection-end-line="35" selection-end-column="68" />
+            <state relative-caret-position="-136">
+              <caret line="6" column="70" selection-start-line="6" selection-start-column="38" selection-end-line="6" selection-end-column="70" />
               <folding>
                 <element signature="e#16#100#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TestMostSimple (1).asn">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret selection-end-line="6" selection-end-column="3" />
             </state>
           </provider>
         </entry>
@@ -399,9 +398,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="HTML File" />
         <option value="ScalaTest Class" />
         <option value="Class" />
-        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -434,10 +433,16 @@
       <find>getBerTagParametersString</find>
       <find>writeConstructedTypeClass</find>
       <find>type</find>
+      <find>steps</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -468,29 +473,41 @@
         <option value="$PROJECT_DIR$/src/main/scala/asn1V1/DefaultSource.scala" />
         <option value="$PROJECT_DIR$/test3.ber" />
         <option value="$PROJECT_DIR$/test22.ber" />
-        <option value="$PROJECT_DIR$/src/main/scala/util/Util.scala" />
         <option value="$PROJECT_DIR$/src/test/scala/util/UtilTest.scala" />
-        <option value="$PROJECT_DIR$/src/main/java/hadoopIO/MyFileRecordReader.java" />
-        <option value="$PROJECT_DIR$/src/test/scala/asn1V1/Asn1ParserSpec.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/asn1V1/ASN1DatasourceRelation.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/SparkApp.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/asn1V1/Asn1Parser.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/util/Util.scala" />
+        <option value="$PROJECT_DIR$/src/test/java/hadoopIO/MyFileRecordReaderTest.scala" />
+        <option value="$PROJECT_DIR$/src/test/scala/asn1V1/Asn1ParserSpec.scala" />
+        <option value="$PROJECT_DIR$/src/test/scala/SparkTest.scala" />
+        <option value="$PROJECT_DIR$/src/main/java/util/SeekableByteArrayInputStream.java" />
+        <option value="$PROJECT_DIR$/src/main/java/hadoopIO/MyFileRecordReader.java" />
+        <option value="$PROJECT_DIR$/src/main/scala/SparkApp.scala" />
+        <option value="$PROJECT_DIR$/src/test/java/hadoopIO/MyFileRecordReaderSpec.scala" />
       </list>
     </option>
   </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <expand>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="spark-asn1-datasource" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+        </path>
+      </expand>
+      <select />
+    </treeState>
+  </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="65" />
-    <option name="y" value="20" />
-    <option name="width" value="1855" />
-    <option name="height" value="1060" />
+    <option name="x" value="-8" />
+    <option name="width" value="1123" />
+    <option name="height" value="1038" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -536,43 +553,7 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="jasn1" type="462c0819:PsiDirectoryNode" />
-              <item name="ber" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ASN1SparkDatasourceV1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ASN1SparkDatasourceV1" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="jasn1" type="462c0819:PsiDirectoryNode" />
-              <item name="ber" type="462c0819:PsiDirectoryNode" />
-              <item name="types" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ASN1SparkDatasourceV1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ASN1SparkDatasourceV1" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="jasn1" type="462c0819:PsiDirectoryNode" />
               <item name="compiler" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ASN1SparkDatasourceV1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ASN1SparkDatasourceV1" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="jasn1" type="462c0819:PsiDirectoryNode" />
-              <item name="util" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ASN1SparkDatasourceV1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ASN1SparkDatasourceV1" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="hadoopIO" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ASN1SparkDatasourceV1" type="b2602c69:ProjectViewProjectNode" />
@@ -630,7 +611,8 @@
               <item name="ASN1SparkDatasourceV1" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="scala" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="hadoopIO" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ASN1SparkDatasourceV1" type="b2602c69:ProjectViewProjectNode" />
@@ -638,20 +620,13 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
               <item name="scala" type="462c0819:PsiDirectoryNode" />
-              <item name="asn1V1" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ASN1SparkDatasourceV1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ASN1SparkDatasourceV1" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="scala" type="462c0819:PsiDirectoryNode" />
-              <item name="util" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -661,7 +636,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="ScalaTest" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.ScalaTest" value="org.scalatest.FlatSpec" />
-    <property name="last_directory_selection" value="$PROJECT_DIR$/src/test/scala" />
+    <property name="last_directory_selection" value="$PROJECT_DIR$/src/test/java" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
@@ -669,14 +644,15 @@
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
+      <recent name="hadoopIO" />
       <recent name="asn1V1" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="org.scalatest.FlatSpec" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="util" />
       <recent name="com.beanit.jasn1.compiler" />
-    </key>
-    <key name="CreateTestDialog.Recents.Supers">
-      <recent name="org.scalatest.FlatSpec" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\NIDHAL\IdeaProjects\ASN1SparkDatasourceV1" />
@@ -698,7 +674,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.SparkApp">
+  <component name="RunManager" selected="ScalaTest.MyFileRecordReaderSpec.precisionCheck should check if the next record starts are right with a precision factor">
     <configuration name="SparkApp" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="SparkApp" />
       <module name="ASN1SparkDatasourceV1" />
@@ -707,9 +683,9 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Asn1ParserSpec.decodeRecord should decode an asn.1 encoded record" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true">
+    <configuration name="MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (1)" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true">
       <module name="ASN1SparkDatasourceV1" />
-      <setting name="path" value="asn1V1.Asn1ParserSpec" />
+      <setting name="path" value="hadoopIO.MyFileRecordReaderSpec" />
       <setting name="vmparams" value="" />
       <setting name="params" value="" />
       <setting name="workingDirectory" value="file://$PROJECT_DIR$" />
@@ -720,15 +696,15 @@
       <setting name="jrePath" value="" />
       <envs />
       <setting name="testKind" value="Test name" />
-      <setting name="path" value="asn1V1.Asn1ParserSpec" />
-      <setting name="testName" value="decodeRecord should decode an asn.1 encoded record" />
+      <setting name="path" value="hadoopIO.MyFileRecordReaderSpec" />
+      <setting name="testName" value="findRecordStart should find the index of the starting byte of a record within an input stream" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AsnParserTest.decodeRecord should decode an asn.1 encoded record" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true">
+    <configuration name="MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (2)" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true">
       <module name="ASN1SparkDatasourceV1" />
-      <setting name="path" value="asn1V1.AsnParserTest" />
+      <setting name="path" value="hadoopIO.MyFileRecordReaderSpec" />
       <setting name="vmparams" value="" />
       <setting name="params" value="" />
       <setting name="workingDirectory" value="file://$PROJECT_DIR$" />
@@ -739,15 +715,15 @@
       <setting name="jrePath" value="" />
       <envs />
       <setting name="testKind" value="Test name" />
-      <setting name="path" value="asn1V1.AsnParserTest" />
-      <setting name="testName" value="decodeRecord should decode an asn.1 encoded record" />
+      <setting name="path" value="hadoopIO.MyFileRecordReaderSpec" />
+      <setting name="testName" value="findRecordStart should find the index of the starting byte of a record within an input stream" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UtilTest.rearrangeSequence should rearrange the sequence elements in a given order" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true">
+    <configuration name="MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (3)" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true">
       <module name="ASN1SparkDatasourceV1" />
-      <setting name="path" value="util.UtilTest" />
+      <setting name="path" value="hadoopIO.MyFileRecordReaderSpec" />
       <setting name="vmparams" value="" />
       <setting name="params" value="" />
       <setting name="workingDirectory" value="file://$PROJECT_DIR$" />
@@ -758,15 +734,15 @@
       <setting name="jrePath" value="" />
       <envs />
       <setting name="testKind" value="Test name" />
-      <setting name="path" value="util.UtilTest" />
-      <setting name="testName" value="rearrangeSequence should rearrange the sequence elements in a given order" />
+      <setting name="path" value="hadoopIO.MyFileRecordReaderSpec" />
+      <setting name="testName" value="findRecordStart should find the index of the starting byte of a record within an input stream" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UtilTest.rearrangeSequence should rearrange the sequence elements in a given order&#10;asn1SequenceToSequence should Convert an ASN1 sequence to a normal sequence" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true">
+    <configuration name="MyFileRecordReaderSpec.precisionCheck should check if the next record starts are right with a precision factor" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true">
       <module name="ASN1SparkDatasourceV1" />
-      <setting name="path" value="util.UtilTest" />
+      <setting name="path" value="hadoopIO.MyFileRecordReaderSpec" />
       <setting name="vmparams" value="" />
       <setting name="params" value="" />
       <setting name="workingDirectory" value="file://$PROJECT_DIR$" />
@@ -777,26 +753,26 @@
       <setting name="jrePath" value="" />
       <envs />
       <setting name="testKind" value="Test name" />
-      <setting name="path" value="util.UtilTest" />
-      <setting name="testName" value="rearrangeSequence should rearrange the sequence elements in a given order&#10;asn1SequenceToSequence should Convert an ASN1 sequence to a normal sequence" />
+      <setting name="path" value="hadoopIO.MyFileRecordReaderSpec" />
+      <setting name="testName" value="precisionCheck should check if the next record starts are right with a precision factor" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <list>
       <item itemvalue="Application.SparkApp" />
-      <item itemvalue="ScalaTest.AsnParserTest.decodeRecord should decode an asn.1 encoded record" />
-      <item itemvalue="ScalaTest.UtilTest.rearrangeSequence should rearrange the sequence elements in a given order" />
-      <item itemvalue="ScalaTest.Asn1ParserSpec.decodeRecord should decode an asn.1 encoded record" />
-      <item itemvalue="ScalaTest.UtilTest.rearrangeSequence should rearrange the sequence elements in a given order&#10;asn1SequenceToSequence should Convert an ASN1 sequence to a normal sequence" />
+      <item itemvalue="ScalaTest.MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (1)" />
+      <item itemvalue="ScalaTest.MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (2)" />
+      <item itemvalue="ScalaTest.MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (3)" />
+      <item itemvalue="ScalaTest.MyFileRecordReaderSpec.precisionCheck should check if the next record starts are right with a precision factor" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="ScalaTest.MyFileRecordReaderSpec.precisionCheck should check if the next record starts are right with a precision factor" />
         <item itemvalue="Application.SparkApp" />
-        <item itemvalue="ScalaTest.UtilTest.rearrangeSequence should rearrange the sequence elements in a given order&#10;asn1SequenceToSequence should Convert an ASN1 sequence to a normal sequence" />
-        <item itemvalue="ScalaTest.Asn1ParserSpec.decodeRecord should decode an asn.1 encoded record" />
-        <item itemvalue="ScalaTest.Asn1ParserSpec.decodeRecord should decode an asn.1 encoded record" />
-        <item itemvalue="ScalaTest.Asn1ParserSpec.decodeRecord should decode an asn.1 encoded record" />
+        <item itemvalue="ScalaTest.MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (3)" />
+        <item itemvalue="ScalaTest.MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (2)" />
+        <item itemvalue="ScalaTest.MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -834,7 +810,9 @@
       <workItem from="1564560256439" duration="14088000" />
       <workItem from="1564578092339" duration="2000" />
       <workItem from="1564578106915" duration="2475000" />
-      <workItem from="1564647137581" duration="9860000" />
+      <workItem from="1564647137581" duration="19548000" />
+      <workItem from="1564677050252" duration="8061000" />
+      <workItem from="1564731595817" duration="9815000" />
     </task>
     <task id="LOCAL-00001" summary="change bouncy castle to jasn1 with unary test for decoding">
       <created>1563194699638</created>
@@ -871,49 +849,56 @@
       <option name="project" value="LOCAL" />
       <updated>1563444516835</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="legacy code">
+      <created>1564657331907</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1564657331907</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Asn1ParserSpec_decodeRecord_should_decode_an_asn_1_encoded_record - 2019.07.21 at 12h 57m 30s.xml">
-      <configuration name="Asn1ParserSpec.decodeRecord should decode an asn.1 encoded record" configurationId="ScalaTestRunConfiguration" />
+    <history-entry file="MyFileRecordReaderSpec_findRecordStart_should_find_the_index_of_the_starting_byte_of_a_record_within_an_input_stream_(1) - 2019.08.02 at 10h 03m 46s.xml">
+      <configuration name="MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (1)" configurationId="ScalaTestRunConfiguration" />
     </history-entry>
-    <history-entry file="Asn1ParserSpec_decodeRecord_should_decode_an_asn_1_encoded_record - 2019.07.21 at 12h 59m 04s.xml">
-      <configuration name="Asn1ParserSpec.decodeRecord should decode an asn.1 encoded record" configurationId="ScalaTestRunConfiguration" />
+    <history-entry file="MyFileRecordReaderSpec_findRecordStart_should_find_the_index_of_the_starting_byte_of_a_record_within_an_input_stream_(2) - 2019.08.02 at 10h 06m 08s.xml">
+      <configuration name="MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (2)" configurationId="ScalaTestRunConfiguration" />
     </history-entry>
-    <history-entry file="Asn1ParserSpec_decodeRecord_should_decode_an_asn_1_encoded_record - 2019.07.21 at 13h 01m 41s.xml">
-      <configuration name="Asn1ParserSpec.decodeRecord should decode an asn.1 encoded record" configurationId="ScalaTestRunConfiguration" />
+    <history-entry file="MyFileRecordReaderSpec_findRecordStart_should_find_the_index_of_the_starting_byte_of_a_record_within_an_input_stream_(3) - 2019.08.02 at 10h 09m 53s.xml">
+      <configuration name="MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (3)" configurationId="ScalaTestRunConfiguration" />
     </history-entry>
-    <history-entry file="Asn1ParserSpec_decodeRecord_should_decode_an_asn_1_encoded_record - 2019.07.30 at 10h 54m 21s.xml">
-      <configuration name="Asn1ParserSpec.decodeRecord should decode an asn.1 encoded record" configurationId="ScalaTestRunConfiguration" />
+    <history-entry file="MyFileRecordReaderSpec_findRecordStart_should_find_the_index_of_the_starting_byte_of_a_record_within_an_input_stream_(3) - 2019.08.02 at 10h 11m 41s.xml">
+      <configuration name="MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (3)" configurationId="ScalaTestRunConfiguration" />
     </history-entry>
-    <history-entry file="Asn1ParserSpec_decodeRecord_should_decode_an_asn_1_encoded_record - 2019.07.31 at 09h 28m 02s.xml">
-      <configuration name="Asn1ParserSpec.decodeRecord should decode an asn.1 encoded record" configurationId="ScalaTestRunConfiguration" />
+    <history-entry file="MyFileRecordReaderSpec_findRecordStart_should_find_the_index_of_the_starting_byte_of_a_record_within_an_input_stream_(3) - 2019.08.02 at 10h 12m 06s.xml">
+      <configuration name="MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (3)" configurationId="ScalaTestRunConfiguration" />
     </history-entry>
-    <history-entry file="Asn1ParserSpec_decodeRecord_should_decode_an_asn_1_encoded_record - 2019.07.31 at 09h 28m 32s.xml">
-      <configuration name="Asn1ParserSpec.decodeRecord should decode an asn.1 encoded record" configurationId="ScalaTestRunConfiguration" />
+    <history-entry file="MyFileRecordReaderSpec_findRecordStart_should_find_the_index_of_the_starting_byte_of_a_record_within_an_input_stream_(3) - 2019.08.02 at 10h 14m 14s.xml">
+      <configuration name="MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (3)" configurationId="ScalaTestRunConfiguration" />
     </history-entry>
-    <history-entry file="Asn1ParserSpec_decodeRecord_should_decode_an_asn_1_encoded_record - 2019.07.31 at 09h 33m 06s.xml">
-      <configuration name="Asn1ParserSpec.decodeRecord should decode an asn.1 encoded record" configurationId="ScalaTestRunConfiguration" />
+    <history-entry file="MyFileRecordReaderSpec_findRecordStart_should_find_the_index_of_the_starting_byte_of_a_record_within_an_input_stream_(3) - 2019.08.02 at 10h 14m 34s.xml">
+      <configuration name="MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (3)" configurationId="ScalaTestRunConfiguration" />
     </history-entry>
-    <history-entry file="Asn1ParserSpec_decodeRecord_should_decode_an_asn_1_encoded_record - 2019.07.31 at 09h 34m 45s.xml">
-      <configuration name="Asn1ParserSpec.decodeRecord should decode an asn.1 encoded record" configurationId="ScalaTestRunConfiguration" />
+    <history-entry file="MyFileRecordReaderSpec_findRecordStart_should_find_the_index_of_the_starting_byte_of_a_record_within_an_input_stream_(3) - 2019.08.02 at 10h 14m 49s.xml">
+      <configuration name="MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (3)" configurationId="ScalaTestRunConfiguration" />
     </history-entry>
-    <history-entry file="UtilTest_rearrangeSequence_should_rearrange_the_sequence_elements_in_a_given_order_asn1SequenceToSequence_should_Convert_an_ASN1_sequence_to_a_normal_sequence - 2019.07.31 at 14h 32m 57s.xml">
-      <configuration name="UtilTest.rearrangeSequence should rearrange the sequence elements in a given order&#10;asn1SequenceToSequence should Convert an ASN1 sequence to a normal sequence" configurationId="ScalaTestRunConfiguration" />
+    <history-entry file="MyFileRecordReaderSpec_findRecordStart_should_find_the_index_of_the_starting_byte_of_a_record_within_an_input_stream_(3) - 2019.08.02 at 10h 15m 17s.xml">
+      <configuration name="MyFileRecordReaderSpec.findRecordStart should find the index of the starting byte of a record within an input stream (3)" configurationId="ScalaTestRunConfiguration" />
     </history-entry>
-    <history-entry file="UtilTest_rearrangeSequence_should_rearrange_the_sequence_elements_in_a_given_order_asn1SequenceToSequence_should_Convert_an_ASN1_sequence_to_a_normal_sequence - 2019.07.31 at 14h 33m 46s.xml">
-      <configuration name="UtilTest.rearrangeSequence should rearrange the sequence elements in a given order&#10;asn1SequenceToSequence should Convert an ASN1 sequence to a normal sequence" configurationId="ScalaTestRunConfiguration" />
+    <history-entry file="MyFileRecordReaderSpec_precisionCheck_should_check_if_the_next_record_starts_are_right_with_a_precision_factor - 2019.08.02 at 11h 12m 29s.xml">
+      <configuration name="MyFileRecordReaderSpec.precisionCheck should check if the next record starts are right with a precision factor" configurationId="ScalaTestRunConfiguration" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="188835000" />
+    <option name="totallyTimeSpent" value="216399000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17986578" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1852349" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -923,12 +908,12 @@
       <window_info id="Learn" order="7" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286119" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49932885" weight="0.562323" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49932885" visible="true" weight="0.388102" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.3286119" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.3286119" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50067115" side_tool="true" weight="0.42634562" />
       <window_info anchor="bottom" id="Messages" order="10" weight="0.3286119" />
@@ -938,7 +923,7 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Maven" order="3" />
+      <window_info anchor="right" id="Maven" order="3" weight="0.3295302" />
       <window_info anchor="right" id="Palette" order="4" />
       <window_info anchor="right" id="Capture Analysis" order="5" />
       <window_info anchor="right" id="CDI" order="6" />
@@ -957,34 +942,10 @@
     <MESSAGE value="clean version after parallelism" />
     <MESSAGE value="generated class example and jasn1 compiler test" />
     <MESSAGE value="automatic class generation and dynamic loading" />
-    <option name="LAST_COMMIT_MESSAGE" value="automatic class generation and dynamic loading" />
+    <MESSAGE value="legacy code" />
+    <option name="LAST_COMMIT_MESSAGE" value="legacy code" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/scala/util/Choice.java" />
-    <entry file="file://$PROJECT_DIR$/src/test/java-gen/com/beanit/jasn1/compiler/test/protocol/Human.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
-          <caret line="92" selection-start-line="92" selection-end-line="92" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Human_SetOfUnTaggedChoice.asn">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="20" selection-start-line="14" selection-start-column="3" selection-end-line="15" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/bar.ber">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/compiler/BerClassWriter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13294">
-          <caret line="816" column="82" selection-start-line="816" selection-start-column="82" selection-end-line="816" selection-end-column="82" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bar.asn">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -1154,12 +1115,12 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test22.ber">
-      <provider selected="true" editor-type-id="LargeFileEditor" />
       <provider editor-type-id="text-editor">
         <state relative-caret-position="-156">
           <caret column="1280000" selection-start-column="1280000" selection-end-column="1280000" />
         </state>
       </provider>
+      <provider selected="true" editor-type-id="LargeFileEditor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/cdr.asn">
       <provider selected="true" editor-type-id="text-editor">
@@ -1171,6 +1132,26 @@
     <entry file="file://$PROJECT_DIR$/test2.ber">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/asn1V1/ASN1DatasourceRelation.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="731">
+          <caret line="51" column="111" selection-start-line="51" selection-start-column="111" selection-end-line="51" selection-end-column="111" />
+          <folding>
+            <element signature="e#16#59#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/humanAnon.asn">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/beanit/jasn1/ber/internal/Util.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="29" column="14" selection-start-line="29" selection-start-column="14" selection-end-line="29" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/TestMostSimple (1).asn">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -1180,77 +1161,99 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/util/Util.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="23" selection-start-line="23" selection-end-line="23" />
+        <state relative-caret-position="340">
+          <caret line="20" selection-start-line="20" selection-end-line="20" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/humanAnon.asn">
+    <entry file="jar://$MAVEN_REPOSITORY$/org/scalatest/scalatest_2.12/3.0.8/scalatest_2.12-3.0.8.jar!/org/scalatest/OutcomeOf.class">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/hadoopIO/MyFileRecordReader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1664">
-          <caret line="47" selection-start-line="47" selection-end-line="47" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/scala/util/UtilTest.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="17" column="3" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="17" selection-end-column="3" />
-          <folding>
-            <element signature="e#14#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/scala/asn1V1/Asn1ParserSpec.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="35" column="68" selection-start-line="35" selection-start-column="68" selection-end-line="35" selection-end-column="68" />
+        <state relative-caret-position="-136">
+          <caret line="6" column="70" selection-start-line="6" selection-start-column="38" selection-end-line="6" selection-end-column="70" />
           <folding>
             <element signature="e#16#100#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/asn1V1/ASN1DatasourceRelation.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="48" column="78" selection-start-line="48" selection-start-column="78" selection-end-line="48" selection-end-column="78" />
-          <folding>
-            <element signature="e#16#59#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/beanit/jasn1/ber/internal/Util.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="93">
-          <caret line="29" column="14" selection-start-line="29" selection-start-column="14" selection-end-line="29" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/asn1V1/Asn1Parser.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="36" lean-forward="true" selection-start-line="36" selection-end-line="36" />
+        <state>
+          <caret line="14" column="67" lean-forward="true" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="67" />
           <folding>
             <element signature="e#16#66#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/scala/util/UtilTest.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-34">
+          <caret line="16" column="13" lean-forward="true" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+          <folding>
+            <element signature="e#14#49#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/util/SeekableByteArrayInputStream.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-484">
+          <caret line="17" column="5" lean-forward="true" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#338#339#0" expanded="true" />
+            <element signature="e#364#365#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/SparkApp.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="15" column="28" lean-forward="true" selection-start-line="15" selection-start-column="28" selection-end-line="15" selection-end-column="28" />
+        <state relative-caret-position="238">
+          <caret line="35" column="22" selection-start-line="35" selection-start-column="22" selection-end-line="35" selection-end-column="22" />
           <folding>
             <element signature="e#0#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java-gen/com/beanit/jasn1/compiler/parser/ASNParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="217" column="12" selection-start-line="217" selection-start-column="12" selection-end-line="217" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/hadoopIO/MyFileRecordReader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="151" column="29" selection-start-line="151" selection-start-column="15" selection-end-line="151" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/scala/SparkTest.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
+          <folding>
+            <element signature="e#0#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/hadoopIO/MyFileRecordReaderSpec.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="211">
+          <caret line="36" column="45" selection-start-line="36" selection-start-column="45" selection-end-line="36" selection-end-column="45" />
+          <folding>
+            <element signature="e#18#58#0" expanded="true" />
           </folding>
         </state>
       </provider>
