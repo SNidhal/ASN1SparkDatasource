@@ -22,8 +22,9 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
       currentSchema = StructType(Asn1Parser.flatten(userSchema))
       initialSchema=userSchema
     } else {
-      currentSchema = inferSchema(schemaFilePath)
-      initialSchema=currentSchema
+      initialSchema=inferSchema(schemaFilePath)
+      currentSchema = StructType(Asn1Parser.flatten(initialSchema))
+
     }
   }
 

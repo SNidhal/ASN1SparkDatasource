@@ -1,22 +1,15 @@
 package compiler;
 
-import org.apache.spark.sql.types.Metadata;
-import org.apache.spark.sql.types.StructField;
-import org.apache.spark.sql.types.StructType;
 import org.openmuc.jasn1.compiler.cli.*;
 import org.openmuc.jasn1.compiler.model.AsnModel;
 import org.openmuc.jasn1.compiler.model.AsnModule;
 import org.openmuc.jasn1.compiler.parser.ASNLexer;
 import org.openmuc.jasn1.compiler.parser.ASNParser;
-
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import static org.apache.spark.sql.types.DataTypes.StringType;
 
 public class Compiler {
 
@@ -107,36 +100,5 @@ public class Compiler {
         parser.module_definitions(model);
         return model;
     }
-
-
-
-    static <T> StructType inspect(Class<T> klazz) {
-        Field[] fields = klazz.getDeclaredFields();
-        System.out.printf("%d fields:%n", fields.length);
-
-        StructType schema = new StructType();
-
-        for (Field field : fields) {
-
-            if( field.getType().getSimpleName() == "String"){
-
-
-                schema.add(
-                        new StructField(field.getName(),StringType,true, Metadata.empty())
-
-
-                );
-            }
-
-        }
-
-
-
-        return schema;
-    }
-
-
-
-
 
 }

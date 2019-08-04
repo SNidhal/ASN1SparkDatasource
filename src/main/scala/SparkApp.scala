@@ -13,17 +13,11 @@ object SparkApp {
     val spark = SparkSession.builder().config(conf).master(master).getOrCreate()
 
 
-    val schema = StructType(
-      StructField("foo", StructType(StructField("bar", IntegerType, true) :: Nil), false) ::
-        StructField("name", StringType, true) ::
-        StructField("age", IntegerType, true) :: Nil
-    )
 
     val as1DataFrame = spark.read.format("asn1V1")
-      //.schema(schema)
       .option("schemaFileType","asn")
-      .option("schemaFilePath", "cdr.asn")
-      .load("test2.ber")
+      .option("schemaFilePath", "humanAnon.asn")
+      .load("humanAnon.ber")
 
     as1DataFrame.printSchema()
 

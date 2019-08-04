@@ -22,13 +22,11 @@ package compiler;
 
 import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
-import org.openmuc.jasn1.ber.types.BerObjectIdentifier;
+import org.apache.spark.sql.types.StructType;
 import org.openmuc.jasn1.compiler.model.*;
 import org.openmuc.jasn1.compiler.model.AsnModule.TagDefault;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -36,7 +34,7 @@ import static org.apache.spark.sql.types.DataTypes.IntegerType;
 import static org.apache.spark.sql.types.DataTypes.StringType;
 
 public class BerClassWriter {
-
+    public int i=0;
     private static Tag stdSeqTag = new Tag();
     private static Tag stdSetTag = new Tag();
 
@@ -138,7 +136,6 @@ public class BerClassWriter {
         tagDefault = module.tagDefault;
 
         for (AsnType typeDefinition : module.typesByName.values()) {
-
             if (typeDefinition instanceof AsnDefinedType) {
                 if (getInformationObjectClass(((AsnDefinedType) typeDefinition).typeName, module) != null) {
                     continue;
@@ -162,7 +159,7 @@ public class BerClassWriter {
                     AsnType assignedAsnType = asnTaggedType.typeReference;
 
                     if (assignedAsnType instanceof AsnConstructedType) {
-                        writeConstructedTypeClass(typeName, assignedAsnType, tag, false, null);
+                        writeConstructedTypeClass(typeName, assignedAsnType, tag, false, null,false);
                     }
                     else {
                         writeRetaggingTypeClass(typeName, getBerType(assignedAsnType), typeDefinition, tag);
@@ -174,7 +171,7 @@ public class BerClassWriter {
                 writeRetaggingTypeClass(typeName, ((AsnDefinedType) typeDefinition).typeName, typeDefinition, null);
             }
             else if (typeDefinition instanceof AsnConstructedType) {
-                writeConstructedTypeClass(typeName, typeDefinition, null, false, null);
+                writeConstructedTypeClass(typeName, typeDefinition, null, false, null,false);
             }
             else {
                 writeRetaggingTypeClass(typeName, getBerType(typeDefinition), typeDefinition, null);
@@ -310,7 +307,7 @@ public class BerClassWriter {
     }
 
     private void writeConstructedTypeClass(String className, AsnType asnType, Tag tag, boolean asInternalClass,
-                                           List<String> listOfSubClassNames) throws IOException {
+                                           List<String> listOfSubClassNames,boolean nested) throws IOException {
 
         if (listOfSubClassNames == null) {
             listOfSubClassNames = new ArrayList<>();
@@ -322,7 +319,7 @@ public class BerClassWriter {
         }
 
         if (asnType instanceof AsnSequenceSet) {
-            writeSequenceOrSetClass(className, (AsnSequenceSet) asnType, tag, isStaticStr, listOfSubClassNames);
+            writeSequenceOrSetClass(className, (AsnSequenceSet) asnType, tag, isStaticStr, listOfSubClassNames,nested);
         }
         else if (asnType instanceof AsnSequenceOf) {
             writeSequenceOfClass(className, (AsnSequenceOf) asnType, tag, isStaticStr, listOfSubClassNames);
@@ -366,14 +363,14 @@ public class BerClassWriter {
             if (isInnerType(componentType)) {
 
                 String subClassName = getClassNameOfComponent(componentType);
-                writeConstructedTypeClass(subClassName, componentType.typeReference, null, true, listOfSubClassNames);
+                writeConstructedTypeClass(subClassName, componentType.typeReference, null, true, listOfSubClassNames,true);
 
             }
         }
 
         setClassNamesOfComponents(listOfSubClassNames, componentTypes);
 
-        writePublicMembers(componentTypes);
+        writePublicMembers(componentTypes,false);
 
         writeEmptyConstructor(className);
 
@@ -483,11 +480,7 @@ public class BerClassWriter {
     }
 
     private void writeSequenceOrSetClass(String className, AsnSequenceSet asnSequenceSet, Tag tag, String isStaticStr,
-                                         List<String> listOfSubClassNames) throws IOException {
-
-        write("public" + isStaticStr + " class " + className + " implements Serializable {\n");
-
-        write("private static final long serialVersionUID = 1L;\n");
+                                         List<String> listOfSubClassNames,boolean nested) throws IOException {
 
         List<AsnElementType> componentTypes = asnSequenceSet.componentTypes;
 
@@ -510,7 +503,7 @@ public class BerClassWriter {
 
                 String subClassName = getClassNameOfComponent(componentType);
 
-                writeConstructedTypeClass(subClassName, componentType.typeReference, null, true, listOfSubClassNames);
+                writeConstructedTypeClass(subClassName, componentType.typeReference, null, true, listOfSubClassNames,true);
 
             }
 
@@ -535,7 +528,7 @@ public class BerClassWriter {
 
         setClassNamesOfComponents(listOfSubClassNames, componentTypes);
 
-        writePublicMembers(componentTypes);
+        writePublicMembers(componentTypes,nested);
 
         writeEmptyConstructor(className);
 
@@ -582,7 +575,7 @@ public class BerClassWriter {
         String referencedTypeName = getClassNameOfSequenceOfElement(componentType, listOfSubClassNames);
 
         if (isInnerType(componentType)) {
-            writeConstructedTypeClass(referencedTypeName, componentType.typeReference, null, true, listOfSubClassNames);
+            writeConstructedTypeClass(referencedTypeName, componentType.typeReference, null, true, listOfSubClassNames,true);
         }
 
         Tag mainTag;
@@ -801,25 +794,51 @@ public class BerClassWriter {
         write("}\n");
     }
 
-    private void writePublicMembers(List<AsnElementType> componentTypes) throws IOException {
-        for (AsnElementType element : componentTypes) {
+    private void writePublicMembers(List<AsnElementType> componentTypes,boolean nested) throws IOException {
 
-                if(element.className .equals("String")) {
+        if(!nested) {
+            for (AsnElementType element : componentTypes) {
+
+                if (element.className.equals("String")) {
 
 
-                    InferSchema.inferredSchema=InferSchema.inferredSchema.add(
+                    InferSchema.inferredSchema = InferSchema.inferredSchema.add(
                             new StructField(cleanUpName(element.name), StringType, true, Metadata.empty())
 
 
                     );
-                }else if(element.className .equals("Integer")){
-                    InferSchema.inferredSchema=InferSchema.inferredSchema.add(
+                } else if (element.className.equals("Integer")) {
+                    InferSchema.inferredSchema = InferSchema.inferredSchema.add(
                             new StructField(cleanUpName(element.name), IntegerType, true, Metadata.empty())
 
 
                     );
                 }
 
+            }
+        }else{
+            StructType st=new StructType();
+            for (AsnElementType element : componentTypes) {
+
+                if (element.className.equals("String")) {
+
+
+                    st=st.add(
+                            new StructField(cleanUpName(element.name), StringType, true, Metadata.empty())
+
+
+                    );
+                } else if (element.className.equals("Integer")) {
+                    st=st.add(
+                            new StructField(cleanUpName(element.name), IntegerType, true, Metadata.empty())
+
+
+                    );
+                }
+
+            }
+            InferSchema.inferredSchema=InferSchema.inferredSchema.add(
+                    new StructField("foo", st, true, Metadata.empty()));
         }
 
     }
