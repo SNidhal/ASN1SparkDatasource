@@ -30,8 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import static org.apache.spark.sql.types.DataTypes.IntegerType;
-import static org.apache.spark.sql.types.DataTypes.StringType;
+import static org.apache.spark.sql.types.DataTypes.*;
 
 public class BerClassWriter {
     public int i=0;
@@ -798,7 +797,7 @@ public class BerClassWriter {
 
         if(!nested) {
             for (AsnElementType element : componentTypes) {
-
+                System.out.println(element.className);
                 if (element.className.equals("String")) {
 
 
@@ -810,6 +809,30 @@ public class BerClassWriter {
                 } else if (element.className.equals("Integer")) {
                     InferSchema.inferredSchema = InferSchema.inferredSchema.add(
                             new StructField(cleanUpName(element.name), IntegerType, true, Metadata.empty())
+
+
+                    );
+                } else if (element.className.equals("Boolean")) {
+                    InferSchema.inferredSchema = InferSchema.inferredSchema.add(
+                            new StructField(cleanUpName(element.name), BooleanType, true, Metadata.empty())
+
+
+                    );
+                } else if (element.className.equals("Real")) {
+                    InferSchema.inferredSchema = InferSchema.inferredSchema.add(
+                            new StructField(cleanUpName(element.name), FloatType, true, Metadata.empty())
+
+
+                    );
+                } else if (element.className.equals("Date")) {
+                    InferSchema.inferredSchema = InferSchema.inferredSchema.add(
+                            new StructField(cleanUpName(element.name), DateType, true, Metadata.empty())
+
+
+                    );
+                } else if (element.className.equals("TimeOfDay")) {
+                    InferSchema.inferredSchema = InferSchema.inferredSchema.add(
+                            new StructField(cleanUpName(element.name), TimestampType, true, Metadata.empty())
 
 
                     );

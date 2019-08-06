@@ -113,6 +113,13 @@ object Asn1Parser {
           if(schema.fieldIndex(field.name)!=schema.fields.length) subCodeLength += berTag.decode(is)
           sequence = sequence :+ Util.castTo(floatValue.toString, field.dataType)
 
+        case DataTypes.DateType =>
+          var dateValue = new BerDate()
+          dateValue.decode(is, false)
+          if(schema.fieldIndex(field.name)!=schema.fields.length) subCodeLength += berTag.decode(is)
+          sequence = sequence :+ Util.castTo(dateValue.toString, field.dataType)
+
+
         case struct: StructType =>
           sequence = sequence :+ decodeNestedRecord(is, struct,false)
       }

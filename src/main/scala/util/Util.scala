@@ -2,7 +2,7 @@ package util
 
 
 
-import org.apache.spark.sql.types.{DataType, IntegerType, LongType, StringType, StructType}
+import org.apache.spark.sql.types.{BooleanType, DataType, IntegerType, LongType, StringType, StructType}
 
 
 object Util {
@@ -12,6 +12,7 @@ object Util {
       case _: IntegerType => value.toInt
       case _: LongType => value.toLong
       case _: StringType => value
+      case _: BooleanType => value.equals("true")
     }
   }
 
