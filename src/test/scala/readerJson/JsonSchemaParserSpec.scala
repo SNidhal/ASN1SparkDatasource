@@ -5,11 +5,11 @@ import java.nio.charset.StandardCharsets
 
 import org.apache.spark.sql.types.{BooleanType, DateType, DoubleType, StructField, StructType}
 import org.scalatest.{FlatSpec, GivenWhenThen, Matchers}
-import reader.JsonReader
+import reader.JsonSchemaParser
 
 import scala.io.BufferedSource
 
-class JsonReaderSpec extends FlatSpec with GivenWhenThen with Matchers {
+class JsonSchemaParserSpec extends FlatSpec with GivenWhenThen with Matchers {
 
 
   val schema1 = StructType(
@@ -24,10 +24,10 @@ class JsonReaderSpec extends FlatSpec with GivenWhenThen with Matchers {
   "parseWithJackson" should "parse json input in Map[String,String] format" in {
     Given("a json buffereSource")
     val json1 = """{ "dateDuJour": "DATE", "size": "REAL", "state": "Boolean" }"""
-    val inputstrea = new ByteArrayInputStream(json1.getBytes(StandardCharsets.UTF_8))
-    val jsonBufferedSource = new BufferedSource(inputstrea)
+    val jsoninput = new ByteArrayInputStream(json1.getBytes(StandardCharsets.UTF_8))
+    val jsonBufferedSource = new BufferedSource(jsoninput)
     When("parseWithJackson is invoked")
-    val resultmap = JsonReader.parseJson(jsonBufferedSource)
+    val resultmap = JsonSchemaParser.parseJson(jsonBufferedSource)
     Then("a Map[String,String] format should be returned")
     resultmap should equal(Map("dateDuJour" -> "DATE", "size" -> "REAL", "state" -> "Boolean"))
 
@@ -36,15 +36,15 @@ class JsonReaderSpec extends FlatSpec with GivenWhenThen with Matchers {
 
   "MapToStructType" should "convert json input to StructType Object" in {
     Given("a json Map")
-    val jsonmapformat = Map("dateDuJour" -> "DATE", "size" -> "REAL", "state" -> "Boolean")
+    val mapsample = Map("dateDuJour" -> "DATE", "size" -> "REAL", "state" -> "Boolean")
 
     When("MapToStructType is invoked")
 
-    val resultsequence = reader.JsonReader.MapToStructType(jsonmapformat)
+    val resultstructtypeobject = reader.JsonSchemaParser.MapToStructType(mapsample)
 
     Then("a StructType Object should be returned")
 
-    resultsequence should equal(schema1)
+    resultstructtypeobject should equal(schema1)
 
   }
 
@@ -56,9 +56,9 @@ class JsonReaderSpec extends FlatSpec with GivenWhenThen with Matchers {
     Given("a json file path")
     val filePath = "src/test/resources/example_1.json"
     When("loadFile is invoked")
-    val resultObject = JsonReader.loadFile(filePath)
+    val structtypeschema = JsonSchemaParser.loadFile(filePath)
     Then("a StructType Object should be returned")
-    resultObject should equal(schema1)
+    structtypeschema should equal(schema1)
 
 
   }

@@ -8,7 +8,7 @@ import scala.collection.mutable.ListBuffer
 import scala.io.{BufferedSource, Source}
 
 
-object JsonReader {
+object JsonSchemaParser {
 
   def parseJson(json: BufferedSource): Map[String, String] = {
     val mapper = new ObjectMapper() with ScalaObjectMapper
@@ -37,14 +37,11 @@ object JsonReader {
 
   def MapToStructType(myMap : Map[String,String]): StructType = {
 
-    val a: Seq[(String, String)] = myMap.keys.toList.zip(myMap.values.toList)
     val list = ListBuffer.empty[StructField]
-    a.foreach { x => {
+    myMap.foreach { x => {
       list += StructField(x._1.toString, createStruct(x._2), false)
-
     }
     }
-
     val schema = StructType(list.toList)
     schema
   }
