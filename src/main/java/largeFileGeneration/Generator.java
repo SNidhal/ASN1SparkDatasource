@@ -7,30 +7,32 @@ import java.nio.file.Files;
 
 public class Generator {
 
-    public static void main(String[] args) throws IOException {
-        File file = new File("src/main/java/largeFileGeneration/baseFile.ber");
-        File file2 = new File("D:/asnLargeFiles/large.ber");
-        byte[] fileContent = Files.readAllBytes(file.toPath());
+    public static void generateFile(String outputPath,long recordNumber) throws IOException {
+
+        File baseFile = new File("src/main/java/largeFileGeneration/baseFile.ber");
+        File destinationFile = new File(outputPath);
+        destinationFile.createNewFile();
+        byte[] fileContent = Files.readAllBytes(baseFile.toPath());
         InputStream is = new ByteArrayInputStream(fileContent);
         ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
-        GenericCallDataRecord personnelRecord_decoded = new GenericCallDataRecord();
+        GenericCallDataRecord record = new GenericCallDataRecord();
 
+        record.decode(is);
+        record.encode(os);
 
-        personnelRecord_decoded.decode(is);
-        personnelRecord_decoded.encode(os);
+        record.decode(is);
+        record.encode(os);
 
-        personnelRecord_decoded.decode(is);
-        personnelRecord_decoded.encode(os);
+        record.decode(is);
+        record.encode(os);
 
-        personnelRecord_decoded.decode(is);
-        personnelRecord_decoded.encode(os);
-
-
-        OutputStream outStream = new FileOutputStream(file2);
+        OutputStream outStream = new FileOutputStream(destinationFile);
 
         int i;
 
-        for (i = 0; i < 9999; i++) {
+
+
+        for (i = 0; i < recordNumber/3; i++) {
             outStream.write(os.getArray());
         }
     }

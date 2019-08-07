@@ -797,68 +797,60 @@ public class BerClassWriter {
 
         if(!nested) {
             for (AsnElementType element : componentTypes) {
-                System.out.println(element.className);
                 if (element.className.equals("String")) {
-
-
                     InferSchema.inferredSchema = InferSchema.inferredSchema.add(
                             new StructField(cleanUpName(element.name), StringType, true, Metadata.empty())
-
-
                     );
                 } else if (element.className.equals("Integer")) {
                     InferSchema.inferredSchema = InferSchema.inferredSchema.add(
                             new StructField(cleanUpName(element.name), IntegerType, true, Metadata.empty())
-
-
                     );
                 } else if (element.className.equals("Boolean")) {
                     InferSchema.inferredSchema = InferSchema.inferredSchema.add(
                             new StructField(cleanUpName(element.name), BooleanType, true, Metadata.empty())
-
-
                     );
                 } else if (element.className.equals("Real")) {
                     InferSchema.inferredSchema = InferSchema.inferredSchema.add(
                             new StructField(cleanUpName(element.name), FloatType, true, Metadata.empty())
-
-
                     );
                 } else if (element.className.equals("Date")) {
                     InferSchema.inferredSchema = InferSchema.inferredSchema.add(
                             new StructField(cleanUpName(element.name), DateType, true, Metadata.empty())
-
-
                     );
                 } else if (element.className.equals("TimeOfDay")) {
                     InferSchema.inferredSchema = InferSchema.inferredSchema.add(
                             new StructField(cleanUpName(element.name), TimestampType, true, Metadata.empty())
-
-
                     );
                 }
-
             }
         }else{
             StructType st=new StructType();
             for (AsnElementType element : componentTypes) {
-
                 if (element.className.equals("String")) {
-
-
                     st=st.add(
                             new StructField(cleanUpName(element.name), StringType, true, Metadata.empty())
-
-
                     );
                 } else if (element.className.equals("Integer")) {
                     st=st.add(
                             new StructField(cleanUpName(element.name), IntegerType, true, Metadata.empty())
-
-
+                    );
+                } else if (element.className.equals("Boolean")) {
+                    st = st.add(
+                            new StructField(cleanUpName(element.name), BooleanType, true, Metadata.empty())
+                    );
+                } else if (element.className.equals("Real")) {
+                    st = st.add(
+                            new StructField(cleanUpName(element.name), FloatType, true, Metadata.empty())
+                    );
+                } else if (element.className.equals("Date")) {
+                    st = st.add(
+                            new StructField(cleanUpName(element.name), DateType, true, Metadata.empty())
+                    );
+                } else if (element.className.equals("TimeOfDay")) {
+                    st = st.add(
+                            new StructField(cleanUpName(element.name), TimestampType, true, Metadata.empty())
                     );
                 }
-
             }
             InferSchema.inferredSchema=InferSchema.inferredSchema.add(
                     new StructField("foo", st, true, Metadata.empty()));
