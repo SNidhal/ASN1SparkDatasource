@@ -57,7 +57,6 @@ public class MyFileRecordReader extends RecordReader<LongWritable, Text> {
                 i = fileSystemInputStream.readByte();
                 byte[] b = {(byte) i};
                 currentValue.append(b, 0, 1);
-
             }
             return true;
         }
@@ -100,17 +99,13 @@ public class MyFileRecordReader extends RecordReader<LongWritable, Text> {
         filePath = ((FileSplit) split).getPath();
         FileSystem fileSystem = filePath.getFileSystem(conf);
         fileSystemInputStream = fileSystem.open(filePath);
-
         if (blockStartPosition != 0) {
             fileSystemInputStream.seek(blockStartPosition);
             blockStartPosition = findRecordStart(fileSystemInputStream,blockStartPosition,blockEndPosition,5);
             if (blockStartPosition != -1) fileSystemInputStream.seek(blockStartPosition);
             else blockStartPosition = blockEndPosition;
         }
-
         currentPosition = blockStartPosition;
-
-
     }
 
     @Override
