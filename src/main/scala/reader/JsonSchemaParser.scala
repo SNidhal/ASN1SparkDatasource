@@ -46,7 +46,7 @@ object JsonSchemaParser {
     schema
   }
 
-  def loadFile(FilePath : String): StructType = {
+  def JsonSourceFileToStructType(FilePath : String): StructType = {
 
     val fileToload = parseJson(Source.fromFile(FilePath))
     MapToStructType(fileToload)
