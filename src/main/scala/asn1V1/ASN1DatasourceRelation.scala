@@ -50,7 +50,12 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
     val FileRDD: RDD[(LongWritable, Text)] = sqlContext.sparkContext
       .newAPIHadoopFile(path, classOf[RawFileAsBinaryInputFormat], classOf[LongWritable], classOf[Text], conf)
     val encodedLinesRDD: RDD[Text] = FileRDD.map(x => x._2)
-    val decodedLinesRDD = encodedLinesRDD.map(encodedLine => Asn1Parser.decodeRecord(encodedLine, initialSchema,true))
+    val decodedLinesRDD = encodedLinesRDD.map(encodedLine => {
+      try{Asn1Parser.decodeRecord(encodedLine, initialSchema,true)}
+      catch {
+        case _:Exception=>Seq()
+      }
+    })
     val filteredDecodedLinesRDD = decodedLinesRDD
       .map(s => Util.rearrangeSequence(requiredColumns, s, currentSchema))
       .map(s => s.filter(_ != " "))
