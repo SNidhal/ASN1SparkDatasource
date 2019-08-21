@@ -18,7 +18,7 @@
  * along with jASN1.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package compiler;
+package reader;
 
 import org.apache.spark.sql.types.Metadata;
 import org.apache.spark.sql.types.StructField;
@@ -798,27 +798,27 @@ public class BerClassWriter {
         if(!nested) {
             for (AsnElementType element : componentTypes) {
                 if (element.className.equals("String")) {
-                    InferSchema.inferredSchema = InferSchema.inferredSchema.add(
+                    AsnSchemaParser.inferredSchema = AsnSchemaParser.inferredSchema.add(
                             new StructField(cleanUpName(element.name), StringType, true, Metadata.empty())
                     );
                 } else if (element.className.equals("Integer")) {
-                    InferSchema.inferredSchema = InferSchema.inferredSchema.add(
+                    AsnSchemaParser.inferredSchema = AsnSchemaParser.inferredSchema.add(
                             new StructField(cleanUpName(element.name), IntegerType, true, Metadata.empty())
                     );
                 } else if (element.className.equals("Boolean")) {
-                    InferSchema.inferredSchema = InferSchema.inferredSchema.add(
+                    AsnSchemaParser.inferredSchema = AsnSchemaParser.inferredSchema.add(
                             new StructField(cleanUpName(element.name), BooleanType, true, Metadata.empty())
                     );
                 } else if (element.className.equals("Real")) {
-                    InferSchema.inferredSchema = InferSchema.inferredSchema.add(
+                    AsnSchemaParser.inferredSchema = AsnSchemaParser.inferredSchema.add(
                             new StructField(cleanUpName(element.name), FloatType, true, Metadata.empty())
                     );
                 } else if (element.className.equals("Date")) {
-                    InferSchema.inferredSchema = InferSchema.inferredSchema.add(
+                    AsnSchemaParser.inferredSchema = AsnSchemaParser.inferredSchema.add(
                             new StructField(cleanUpName(element.name), DateType, true, Metadata.empty())
                     );
                 } else if (element.className.equals("TimeOfDay")) {
-                    InferSchema.inferredSchema = InferSchema.inferredSchema.add(
+                    AsnSchemaParser.inferredSchema = AsnSchemaParser.inferredSchema.add(
                             new StructField(cleanUpName(element.name), TimestampType, true, Metadata.empty())
                     );
                 }
@@ -852,7 +852,7 @@ public class BerClassWriter {
                     );
                 }
             }
-            InferSchema.inferredSchema=InferSchema.inferredSchema.add(
+            AsnSchemaParser.inferredSchema= AsnSchemaParser.inferredSchema.add(
                     new StructField("foo", st, true, Metadata.empty()));
         }
 

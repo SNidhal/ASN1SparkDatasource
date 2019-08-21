@@ -16,8 +16,8 @@ object SparkApp {
 
     val as1DataFrame = spark.read.format("asn1V1")
       .option("schemaFileType","asn")
-      .option("schemaFilePath", "humanAnon.asn")
-      .load("humanAnon.ber")
+      .option("schemaFilePath", "src/test/resources/simpleTypes.asn")
+      .load("src/test/resources/simpleTypes.ber")
 
     as1DataFrame.printSchema()
 

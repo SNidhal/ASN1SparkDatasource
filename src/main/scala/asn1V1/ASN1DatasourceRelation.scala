@@ -7,8 +7,8 @@ import org.apache.spark.sql.sources._
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.{Row, SQLContext}
 import util.Util
-import compiler.InferSchema
 import hadoopIO.RawFileAsBinaryInputFormat
+import reader.{AsnSchemaParser, JsonSchemaParser}
 
 case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFileType: String, path: String, userSchema: StructType, schemaFilePath: String)
   extends BaseRelation with TableScan with PrunedScan with Serializable {
@@ -66,9 +66,9 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
   private def inferSchema(path: String): StructType = {
     var inferredSchema: StructType = null
     if (schemaFileType == "asn") {
-      inferredSchema = InferSchema.getInferredSchema(path)
+      inferredSchema = AsnSchemaParser.getParsedSchema(path)
     } else if (schemaFileType == "json") {
-      inferredSchema = ???
+      inferredSchema = JsonSchemaParser.JsonSourceFileToStructType(path)
     }
     inferredSchema
   }

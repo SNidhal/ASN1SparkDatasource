@@ -1,4 +1,4 @@
-package compiler;
+package reader;
 
 import org.openmuc.jasn1.compiler.cli.*;
 import org.openmuc.jasn1.compiler.model.AsnModel;
