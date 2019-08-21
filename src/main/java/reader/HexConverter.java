@@ -1,4 +1,4 @@
-package compiler;
+package reader;
 
 import javax.xml.bind.DatatypeConverter;
 
