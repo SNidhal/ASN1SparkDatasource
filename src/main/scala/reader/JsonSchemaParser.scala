@@ -1,24 +1,11 @@
 package reader
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
+
 import org.apache.spark.sql.types._
-
 import scala.collection.mutable.ListBuffer
-import scala.io.{BufferedSource, Source}
-
 
 object JsonSchemaParser {
 
-  def parseJson(json: BufferedSource): Map[String, String] = {
-    val mapper = new ObjectMapper() with ScalaObjectMapper
-    mapper.registerModule(DefaultScalaModule)
-    mapper.readValue[Map[String, String]](json.reader())
-
-  }
-
   def createStruct(myObject: String): DataType = {
-
     myObject match {
       case "String" => StringType
       case "Integer" => IntegerType
@@ -31,25 +18,21 @@ object JsonSchemaParser {
       case "Null" => NullType
       case "Time" => TimestampType
       case "Short" => ShortType
-
     }
   }
 
-  def MapToStructType(myMap : Map[String,String]): StructType = {
-
+  def JsonSourceFileToStructType(FilePath: String): StructType = {
+    val DataFile = scala.io.Source.fromFile(FilePath)
+    val sourceFileString = DataFile.mkString
     val list = ListBuffer.empty[StructField]
-    myMap.foreach { x => {
-      list += StructField(x._1.toString, createStruct(x._2), false)
-    }
-    }
+    sourceFileString.split(",").foreach(
+      line => {
+        val key = line.substring(line.indexOf("\"", 1) + 1, line.indexOf("\"", line.indexOf("\"", 1) + 1))
+        val value = line.substring(line.indexOf("\"", line.indexOf(":")) + 1, line.indexOf("\"", line.indexOf("\"", line.indexOf(":")) + 1))
+        list += StructField(key.toString, createStruct(value), false)
+      }
+    )
     val schema = StructType(list.toList)
     schema
   }
-
-  def JsonSourceFileToStructType(FilePath : String): StructType = {
-
-    val fileToload = parseJson(Source.fromFile(FilePath))
-    MapToStructType(fileToload)
-  }
-
 }
