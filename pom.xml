@@ -59,6 +59,18 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mdkt.compiler</groupId>
+            <artifactId>InMemoryJavaCompiler</artifactId>
+            <version>1.3.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.beanit/jasn1 -->
+        <dependency>
+            <groupId>com.beanit</groupId>
+            <artifactId>jasn1</artifactId>
+            <version>1.11.2</version>
+        </dependency>
+
 
 
     </dependencies>

@@ -12,7 +12,7 @@ class Asn1ParserSpec extends FlatSpec with GivenWhenThen with Matchers {
 
   "decodeRecord" should "decode an asn.1 encoded record" in {
 
-    Given("an encoded record , the name of the generated class and a schema")
+    Given("an encoded record and a schema")
 
     val schema = StructType(
       StructField("recordNumber", IntegerType, false) ::
@@ -21,11 +21,8 @@ class Asn1ParserSpec extends FlatSpec with GivenWhenThen with Matchers {
         StructField("startDate", StringType, true) ::
         StructField("startTime", StringType, true) ::
         StructField("duration", IntegerType, true) :: Nil
-
     )
 
-
-    val className = "GenericCallDataRecord"
 
     val recordBytes = Array[Byte](48, 50, 66, 1, 1, 72, 11, 49, 53, 53, 53, 53, 53, 53, 48, 49, 48, 48, 73, 11, 49, 53, 53, 53, 53, 53, 53
       , 48, 49, 48, 49, 80, 8, 50, 48, 49, 51, 49, 48, 49, 54, 82, 6, 49, 51, 52, 53, 51, 52, 83, 1, 65, 48)
@@ -35,7 +32,7 @@ class Asn1ParserSpec extends FlatSpec with GivenWhenThen with Matchers {
 
     When("decodeRecord is invoked")
 
-    val recordSequence = Asn1Parser.decodeRecord(record, className, schema)
+    val recordSequence = Asn1Parser.decodeRecord(record, schema,true)
 
     Then("a sequence of the record decoded fields should be returned")
 
