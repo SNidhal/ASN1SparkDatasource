@@ -16,7 +16,7 @@ class DefaultSource extends RelationProvider with SchemaRelationProvider  {
     val schemaFileType = parameters.get("schemaFileType")
     path match {
       case Some(p)  => ASN1DatasourceRelation(sqlContext,schemaFileType.get, p, schema,schemaFilePath.get)
-      case _ => throw new IllegalArgumentException("Path is required for custom-datasource format!!")
+      case _ => throw new IllegalArgumentException("Path is required for asn.1 datasource format!!")
     }
   }
 

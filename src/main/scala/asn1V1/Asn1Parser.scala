@@ -74,7 +74,7 @@ object Asn1Parser {
     var subCodeLength = 0
     val berTag = new BerTag
     if (withTag) {
-      codeLength += tag.decodeAndCheck(is);
+      codeLength += tag.decodeAndCheck(is)
     }
     val length = new BerLength
     codeLength += length.decode(is)
