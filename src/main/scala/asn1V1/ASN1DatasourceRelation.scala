@@ -12,7 +12,8 @@ import hadoopIO.RawFileAsBinaryInputFormat
 import reader.{AsnSchemaParser, JsonSchemaParser}
 
 case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFileType: String, path: String
-                                  , userSchema: StructType, schemaFilePath: String, customDecoder: String)
+                                  , userSchema: StructType, schemaFilePath: String, customDecoder: String
+                                  , customDecoderLanguage: String)
   extends BaseRelation with TableScan with PrunedScan with Serializable {
 
 
@@ -60,10 +61,13 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
           case _: Exception => Seq()
         }
       } else {
-//        val customDecoderClassInstance = Class.forName(customDecoder).newInstance
-//        val decodeMethod = customDecoderClassInstance.getClass.getMethod("decode", encodedLine.getClass)
-//        decodeMethod.invoke(customDecoderClassInstance, encodedLine).asInstanceOf[Seq[Any]]
-        DynamicObjectLoader.getObject(customDecoder).decode(encodedLine,initialSchema)
+        if (customDecoderLanguage.equals("java")) {
+          val customDecoderClassInstance = Class.forName(customDecoder).newInstance
+          val decodeMethod = customDecoderClassInstance.getClass.getMethod("decode", encodedLine.getClass,initialSchema.getClass)
+          decodeMethod.invoke(customDecoderClassInstance, encodedLine,initialSchema).asInstanceOf[Seq[Any]]
+        } else {
+          DynamicObjectLoader.getObject(customDecoder).decode(encodedLine, initialSchema)
+        }
       }
     })
     val filteredDecodedLinesRDD = decodedLinesRDD
