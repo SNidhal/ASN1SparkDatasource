@@ -1,6 +1,6 @@
 package asn1V1
 
-import customDecoding.DynamicObjectLoader
+import customDecoding.DynamicScalaDecoderObjectLoader
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{LongWritable, Text}
 import org.apache.spark.rdd.RDD
@@ -66,7 +66,7 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
           val decodeMethod = customDecoderClassInstance.getClass.getMethod("decode", encodedLine.getClass,initialSchema.getClass)
           decodeMethod.invoke(customDecoderClassInstance, encodedLine,initialSchema).asInstanceOf[Seq[Any]]
         } else {
-          DynamicObjectLoader.getObject(customDecoder).decode(encodedLine, initialSchema)
+          DynamicScalaDecoderObjectLoader.getDecoderObject(customDecoder).decode(encodedLine, initialSchema)
         }
       }
     })
