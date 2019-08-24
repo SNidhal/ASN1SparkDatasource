@@ -22,8 +22,8 @@ object JsonSchemaParser {
   }
 
   def JsonSourceFileToStructType(FilePath: String): StructType = {
-    val DataFile = scala.io.Source.fromFile(FilePath)
-    val sourceFileString = DataFile.mkString
+    val dataFile = scala.io.Source.fromFile(FilePath)
+    val sourceFileString = dataFile.mkString
     val list = ListBuffer.empty[StructField]
     sourceFileString.split(",").foreach(
       line => {
