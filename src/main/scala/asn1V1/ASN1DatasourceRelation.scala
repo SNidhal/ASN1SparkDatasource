@@ -1,5 +1,6 @@
 package asn1V1
 
+import customDecoding.DynamicObjectLoader
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{LongWritable, Text}
 import org.apache.spark.rdd.RDD
@@ -10,19 +11,20 @@ import util.Util
 import hadoopIO.RawFileAsBinaryInputFormat
 import reader.{AsnSchemaParser, JsonSchemaParser}
 
-case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFileType: String, path: String, userSchema: StructType, schemaFilePath: String)
+case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFileType: String, path: String
+                                  , userSchema: StructType, schemaFilePath: String, customDecoder: String)
   extends BaseRelation with TableScan with PrunedScan with Serializable {
 
 
   var currentSchema: StructType = _
-  var initialSchema: StructType =_
+  var initialSchema: StructType = _
 
   {
     if (userSchema != null) {
       currentSchema = StructType(Asn1Parser.flatten(userSchema))
-      initialSchema=userSchema
+      initialSchema = userSchema
     } else {
-      initialSchema=inferSchema(schemaFilePath)
+      initialSchema = inferSchema(schemaFilePath)
       currentSchema = StructType(Asn1Parser.flatten(initialSchema))
 
     }
@@ -38,7 +40,7 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
       .newAPIHadoopFile(path, classOf[RawFileAsBinaryInputFormat], classOf[LongWritable], classOf[Text], conf)
     val encodedRecordsRDD: RDD[Text] = FileRDD.map(x => x._2)
     val decodedRecordsRDD = encodedRecordsRDD.map((encodedLine: Text) => {
-      Asn1Parser.decodeRecord(encodedLine, currentSchema,true)
+      Asn1Parser.decodeRecord(encodedLine, currentSchema, true)
     })
     decodedRecordsRDD.map(s => Row.fromSeq(s))
   }
@@ -46,14 +48,22 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
 
   override def buildScan(requiredColumns: Array[String]): RDD[Row] = {
     val conf: Configuration = new Configuration(sqlContext.sparkContext.hadoopConfiguration)
-    conf.set("mapred.max.split.size", "50000")
     val FileRDD: RDD[(LongWritable, Text)] = sqlContext.sparkContext
       .newAPIHadoopFile(path, classOf[RawFileAsBinaryInputFormat], classOf[LongWritable], classOf[Text], conf)
     val encodedLinesRDD: RDD[Text] = FileRDD.map(x => x._2)
     val decodedLinesRDD = encodedLinesRDD.map(encodedLine => {
-      try{Asn1Parser.decodeRecord(encodedLine, initialSchema,true)}
-      catch {
-        case _:Exception=>Seq()
+      if (customDecoder.equals("none")) {
+        try {
+          Asn1Parser.decodeRecord(encodedLine, initialSchema, true)
+        }
+        catch {
+          case _: Exception => Seq()
+        }
+      } else {
+//        val customDecoderClassInstance = Class.forName(customDecoder).newInstance
+//        val decodeMethod = customDecoderClassInstance.getClass.getMethod("decode", encodedLine.getClass)
+//        decodeMethod.invoke(customDecoderClassInstance, encodedLine).asInstanceOf[Seq[Any]]
+        DynamicObjectLoader.getObject(customDecoder).decode(encodedLine,initialSchema)
       }
     })
     val filteredDecodedLinesRDD = decodedLinesRDD
