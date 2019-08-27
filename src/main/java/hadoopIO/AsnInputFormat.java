@@ -11,6 +11,7 @@ public class AsnInputFormat extends FileInputFormat<LongWritable, Text> {
     @Override
     public RecordReader<LongWritable, Text> createRecordReader(
             InputSplit split, TaskAttemptContext context) {
-        return new AsnRecordReader(context.getConfiguration().getInt("precisionFactor",5));
+        return new AsnRecordReader(context.getConfiguration().getInt("precisionFactor",5),
+                context.getConfiguration().getInt("tagByte",48));
     }
 }

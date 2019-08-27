@@ -15,10 +15,12 @@ import java.io.EOFException;
 import java.io.IOException;
 
 public class AsnRecordReader extends RecordReader<LongWritable, Text> {
-    public AsnRecordReader(int precisionFactor) {
+    public AsnRecordReader(int precisionFactor,int tagByte) {
         this.precisionFactor = precisionFactor;
+        this.tagByte = tagByte;
     }
     private int precisionFactor;
+    private int tagByte;
     private Path filePath;
     private FSDataInputStream fileSystemInputStream;
     private long blockStartPosition, blockEndPosition, currentPosition = 0;
@@ -124,7 +126,7 @@ public class AsnRecordReader extends RecordReader<LongWritable, Text> {
         for (position = (int) blockStartPosition; position < blockEndPosition; position++) {
             fileSystemInputStream.seek(position);
             int startByte = fileSystemInputStream.readByte();
-            if (startByte == 48) {
+            if (startByte == tagByte) {
                 fileSystemInputStream.seek(position + 1);
                 int sizeByte = fileSystemInputStream.readByte();
                 if (fileSystemInputStream.getPos() + sizeByte == blockEndPosition) {
@@ -133,7 +135,7 @@ public class AsnRecordReader extends RecordReader<LongWritable, Text> {
                     try {
                         fileSystemInputStream.seek(fileSystemInputStream.getPos() + sizeByte);
                         int nextByte = fileSystemInputStream.readByte();
-                        if (nextByte == 48) {
+                        if (nextByte == tagByte) {
                             int res = precisionCheck(precisionFactor - 1, fileSystemInputStream.getPos(), fileSystemInputStream);
                             if (res != -1) return position;
                         }
@@ -155,7 +157,7 @@ public class AsnRecordReader extends RecordReader<LongWritable, Text> {
         try {
             fileSystemInputStream.seek(fileSystemInputStream.getPos() + sizeByte);
             int nextByte = fileSystemInputStream.readByte();
-            if (nextByte == 48) {
+            if (nextByte == tagByte) {
                 int res = precisionCheck(precisionFactor - 1, fileSystemInputStream.getPos(), fileSystemInputStream);
                 return res;
             }

@@ -16,6 +16,7 @@ class DefaultSource extends RelationProvider with SchemaRelationProvider {
     val schemaFileType = parameters.getOrElse("schemaFileType", sys.error("type of the schema file must be specified."))
     val customDecoder = parameters.getOrElse("customDecoder", "none")
     val precisionFactor = parameters.getOrElse("precisionFactor", "5")
+    val mainTag = parameters.getOrElse("mainTag", "sequence")
     val customDecoderLanguage = parameters.getOrElse("customDecoderLanguage", "none")
 
     if (customDecoder.equals("none") ^ customDecoderLanguage.equals("none"))
@@ -29,7 +30,8 @@ class DefaultSource extends RelationProvider with SchemaRelationProvider {
       schemaFilePath,
       customDecoder,
       customDecoderLanguage,
-      precisionFactor)
+      precisionFactor,
+      mainTag)
   }
 
 }

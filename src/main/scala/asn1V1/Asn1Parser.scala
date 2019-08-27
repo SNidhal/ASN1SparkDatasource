@@ -11,10 +11,10 @@ import util.Util
 
 object Asn1Parser {
 
-  def decodeRecord(record: Text, schema: StructType ,withTag:Boolean): Seq[Any] = {
+  def decodeRecord(record: Text, schema: StructType, withTag: Boolean, mainTag: Int): Seq[Any] = {
     val lineInputStream = new ByteArrayInputStream(record.getBytes)
     var sequence: Seq[Seq[Any]] = Seq()
-    val tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16)
+    val tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, mainTag)
     var codeLength = 0
     var subCodeLength = 0
     val berTag = new BerTag
@@ -31,45 +31,45 @@ object Asn1Parser {
         case DataTypes.IntegerType =>
           var integerValue = new BerInteger
           integerValue.decode(lineInputStream, false)
-          if(schema.fieldIndex(field.name)!=schema.fields.length) subCodeLength += berTag.decode(lineInputStream)
+          if (schema.fieldIndex(field.name) != schema.fields.length) subCodeLength += berTag.decode(lineInputStream)
           sequence = sequence :+ Seq(Util.castTo(integerValue.intValue().toString, field.dataType))
 
         case DataTypes.StringType =>
           var stringValue = new BerUTF8String()
           stringValue.decode(lineInputStream, false)
-          if(schema.fieldIndex(field.name)!=schema.fields.length)
+          if (schema.fieldIndex(field.name) != schema.fields.length)
             subCodeLength += berTag.decode(lineInputStream)
           sequence = sequence :+ Seq(Util.castTo(stringValue.toString, field.dataType))
 
         case DataTypes.BooleanType =>
           var booleanValue = new BerBoolean()
           booleanValue.decode(lineInputStream, false)
-          if(schema.fieldIndex(field.name)!=schema.fields.length) subCodeLength += berTag.decode(lineInputStream)
+          if (schema.fieldIndex(field.name) != schema.fields.length) subCodeLength += berTag.decode(lineInputStream)
           sequence = sequence :+ Seq(Util.castTo(booleanValue.toString, field.dataType))
 
         case DataTypes.DateType =>
           var dateValue = new BerDate()
           dateValue.decode(lineInputStream, false)
-          if(schema.fieldIndex(field.name)!=schema.fields.length) subCodeLength += berTag.decode(lineInputStream)
+          if (schema.fieldIndex(field.name) != schema.fields.length) subCodeLength += berTag.decode(lineInputStream)
           sequence = sequence :+ Seq(Util.castTo(dateValue.toString, field.dataType))
 
         case DataTypes.FloatType =>
           var floatValue = new BerReal()
           floatValue.decode(lineInputStream, false)
-          if(schema.fieldIndex(field.name)!=schema.fields.length) subCodeLength += berTag.decode(lineInputStream)
+          if (schema.fieldIndex(field.name) != schema.fields.length) subCodeLength += berTag.decode(lineInputStream)
           sequence = sequence :+ Seq(Util.castTo(floatValue.toString, field.dataType))
 
         case struct: StructType =>
-          sequence = sequence :+ decodeNestedRecord(lineInputStream, struct,false)
+          sequence = sequence :+ decodeNestedRecord(lineInputStream, struct, false,mainTag)
       }
     })
     sequence.flatten
   }
 
 
-  def decodeNestedRecord(is: InputStream, schema: StructType ,withTag:Boolean): Seq[Any] = {
+  def decodeNestedRecord(is: InputStream, schema: StructType, withTag: Boolean,mainTag: Int): Seq[Any] = {
     var sequence: Seq[Any] = Seq()
-    val tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16)
+    val tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, mainTag)
     var codeLength = 0
     var subCodeLength = 0
     val berTag = new BerTag
@@ -86,42 +86,42 @@ object Asn1Parser {
         case DataTypes.IntegerType =>
           var integerValue = new BerInteger
           integerValue.decode(is, false)
-          if(schema.fieldIndex(field.name)!=schema.fields.length) subCodeLength += berTag.decode(is)
+          if (schema.fieldIndex(field.name) != schema.fields.length) subCodeLength += berTag.decode(is)
           sequence = sequence :+ Util.castTo(integerValue.intValue().toString, field.dataType)
 
         case DataTypes.StringType =>
           var stringValue = new BerUTF8String()
           stringValue.decode(is, false)
-          if(schema.fieldIndex(field.name)!=schema.fields.length) subCodeLength += berTag.decode(is)
+          if (schema.fieldIndex(field.name) != schema.fields.length) subCodeLength += berTag.decode(is)
           sequence = sequence :+ Util.castTo(stringValue.toString, field.dataType)
 
         case DataTypes.BooleanType =>
           var booleanValue = new BerBoolean()
           booleanValue.decode(is, false)
-          if(schema.fieldIndex(field.name)!=schema.fields.length) subCodeLength += berTag.decode(is)
+          if (schema.fieldIndex(field.name) != schema.fields.length) subCodeLength += berTag.decode(is)
           sequence = sequence :+ Util.castTo(booleanValue.toString, field.dataType)
 
         case DataTypes.DateType =>
           var dateValue = new BerDate()
           dateValue.decode(is, false)
-          if(schema.fieldIndex(field.name)!=schema.fields.length) subCodeLength += berTag.decode(is)
+          if (schema.fieldIndex(field.name) != schema.fields.length) subCodeLength += berTag.decode(is)
           sequence = sequence :+ Util.castTo(dateValue.toString, field.dataType)
 
         case DataTypes.FloatType =>
           var floatValue = new BerReal()
           floatValue.decode(is, false)
-          if(schema.fieldIndex(field.name)!=schema.fields.length) subCodeLength += berTag.decode(is)
+          if (schema.fieldIndex(field.name) != schema.fields.length) subCodeLength += berTag.decode(is)
           sequence = sequence :+ Util.castTo(floatValue.toString, field.dataType)
 
         case DataTypes.DateType =>
           var dateValue = new BerDate()
           dateValue.decode(is, false)
-          if(schema.fieldIndex(field.name)!=schema.fields.length) subCodeLength += berTag.decode(is)
+          if (schema.fieldIndex(field.name) != schema.fields.length) subCodeLength += berTag.decode(is)
           sequence = sequence :+ Util.castTo(dateValue.toString, field.dataType)
 
 
         case struct: StructType =>
-          sequence = sequence :+ decodeNestedRecord(is, struct,false)
+          sequence = sequence :+ decodeNestedRecord(is, struct, false,mainTag)
       }
     })
     sequence
@@ -131,7 +131,7 @@ object Asn1Parser {
   def flatten(schema: StructType): Array[StructField] = {
     schema.fields.flatMap { f =>
       f.dataType match {
-        case struct: StructType => flatten(struct).map(x=>x.copy(name = f.name+"."+x.name))
+        case struct: StructType => flatten(struct).map(x => x.copy(name = f.name + "." + x.name))
         case _ => Array(f)
       }
     }

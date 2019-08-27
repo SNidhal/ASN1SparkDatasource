@@ -21,7 +21,7 @@ class AsnRecordReaderSpec extends FlatSpec with GivenWhenThen with Matchers {
 
     When("findRecordStart is invoked")
 
-    val recordStartIndex = new AsnRecordReader(precisionFactor).findRecordStart(is, inputSplitStartIndex, inputSplitEndIndex, precisionFactor)
+    val recordStartIndex = new AsnRecordReader(precisionFactor,48).findRecordStart(is, inputSplitStartIndex, inputSplitEndIndex, precisionFactor)
 
     Then("the index of the record start should be returned")
 
