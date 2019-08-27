@@ -13,6 +13,7 @@ When reading files the API accepts several options:
 * `customDecoderLanguage`: the language in which the custom decoder is written.
 * `customDecoder`: the fully qualified name of the user custom decoder.
 * `precisionFactor`: the number of next records to check the start position for splitting, by default equal to 5 .
+* `mainTag`: the name of main structure of the asn file, by default equal to 'sequence' .
 
 
 ### Scala API
