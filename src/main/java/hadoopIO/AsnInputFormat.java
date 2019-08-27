@@ -7,13 +7,13 @@ import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 
-import java.io.IOException;
+public class AsnInputFormat extends FileInputFormat<LongWritable, Text> {
 
-public class RawFileAsBinaryInputFormat extends FileInputFormat<LongWritable,Text >  {
+    public static String precisionFactor;
 
     @Override
-    public RecordReader<LongWritable , Text> createRecordReader(
-            InputSplit split, TaskAttemptContext context)  {
-        return new MyFileRecordReader();
+    public RecordReader<LongWritable, Text> createRecordReader(
+            InputSplit split, TaskAttemptContext context) {
+        return new AsnRecordReader(context.getConfiguration().getInt("precisionFactor",5));
     }
 }

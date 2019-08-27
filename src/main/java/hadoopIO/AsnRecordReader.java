@@ -10,11 +10,15 @@ import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
+
 import java.io.EOFException;
 import java.io.IOException;
 
-public class MyFileRecordReader extends RecordReader<LongWritable, Text> {
-
+public class AsnRecordReader extends RecordReader<LongWritable, Text> {
+    public AsnRecordReader(int precisionFactor) {
+        this.precisionFactor = precisionFactor;
+    }
+    private int precisionFactor;
     private Path filePath;
     private FSDataInputStream fileSystemInputStream;
     private long blockStartPosition, blockEndPosition, currentPosition = 0;
@@ -101,7 +105,7 @@ public class MyFileRecordReader extends RecordReader<LongWritable, Text> {
         fileSystemInputStream = fileSystem.open(filePath);
         if (blockStartPosition != 0) {
             fileSystemInputStream.seek(blockStartPosition);
-            blockStartPosition = findRecordStart(fileSystemInputStream,blockStartPosition,blockEndPosition,5);
+            blockStartPosition = findRecordStart(fileSystemInputStream, blockStartPosition, blockEndPosition, precisionFactor);
             if (blockStartPosition != -1) fileSystemInputStream.seek(blockStartPosition);
             else blockStartPosition = blockEndPosition;
         }
@@ -114,7 +118,7 @@ public class MyFileRecordReader extends RecordReader<LongWritable, Text> {
     }
 
 
-    public int findRecordStart(FSDataInputStream fileSystemInputStream,long blockStartPosition, long blockEndPosition, int precisionFactor) throws IOException {
+    public int findRecordStart(FSDataInputStream fileSystemInputStream, long blockStartPosition, long blockEndPosition, int precisionFactor) throws IOException {
 
         int position = 0;
         for (position = (int) blockStartPosition; position < blockEndPosition; position++) {
@@ -130,7 +134,7 @@ public class MyFileRecordReader extends RecordReader<LongWritable, Text> {
                         fileSystemInputStream.seek(fileSystemInputStream.getPos() + sizeByte);
                         int nextByte = fileSystemInputStream.readByte();
                         if (nextByte == 48) {
-                            int res = precisionCheck(precisionFactor - 1, fileSystemInputStream.getPos(),fileSystemInputStream);
+                            int res = precisionCheck(precisionFactor - 1, fileSystemInputStream.getPos(), fileSystemInputStream);
                             if (res != -1) return position;
                         }
                     } catch (EOFException e) {
@@ -144,7 +148,7 @@ public class MyFileRecordReader extends RecordReader<LongWritable, Text> {
     }
 
 
-    public int precisionCheck(int precisionFactor, long init,FSDataInputStream fileSystemInputStream) throws IOException {
+    public int precisionCheck(int precisionFactor, long init, FSDataInputStream fileSystemInputStream) throws IOException {
         if (precisionFactor == 0) return (int) init;
         int sizeByte = fileSystemInputStream.readByte();
 
@@ -152,7 +156,7 @@ public class MyFileRecordReader extends RecordReader<LongWritable, Text> {
             fileSystemInputStream.seek(fileSystemInputStream.getPos() + sizeByte);
             int nextByte = fileSystemInputStream.readByte();
             if (nextByte == 48) {
-                int res = precisionCheck(precisionFactor - 1, fileSystemInputStream.getPos(),fileSystemInputStream);
+                int res = precisionCheck(precisionFactor - 1, fileSystemInputStream.getPos(), fileSystemInputStream);
                 return res;
             }
         } catch (EOFException e) {
