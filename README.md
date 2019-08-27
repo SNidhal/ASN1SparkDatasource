@@ -108,14 +108,14 @@ which you may make direct use of as follows:
 import org.apache.spark.sql.SparkSession
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{LongWritable, Text}
-import hadoopIO.RawFileAsBinaryInputFormat
+import hadoopIO.AsnInputFormat
 
 val spark = SparkSession.builder().master("local[*]").getOrCreate()
 val conf: Configuration = new Configuration(spark.sparkContext.hadoopConfiguration)
 val records = spark.sparkContext
                        .newAPIHadoopFile(
                        "src/test/resources/simpleTypes.ber", 
-                       classOf[RawFileAsBinaryInputFormat], 
+                       classOf[AsnInputFormat], 
                        classOf[LongWritable], 
                        classOf[Text], 
                        conf)
