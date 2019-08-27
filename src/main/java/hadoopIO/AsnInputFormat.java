@@ -8,9 +8,6 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 
 public class AsnInputFormat extends FileInputFormat<LongWritable, Text> {
-
-    public static String precisionFactor;
-
     @Override
     public RecordReader<LongWritable, Text> createRecordReader(
             InputSplit split, TaskAttemptContext context) {
