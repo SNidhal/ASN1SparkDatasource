@@ -12,6 +12,7 @@ When reading files the API accepts several options:
 * `schemaFilePath`: the path of the file that contain the schema definition (currently supports scala and java).
 * `customDecoderLanguage`: the language in which the custom decoder is written.
 * `customDecoder`: the fully qualified name of the user custom decoder.
+* `precisionFactor`: the number of next records to check the start position for splitting, by default equal to 5 .
 
 
 ### Scala API
@@ -23,7 +24,7 @@ schema inference is not yet supported, the path of the schema definition file an
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.SparkConf
 
-val conf = new SparkConf().setAppName("spark-custom-datasource")
+val conf = new SparkConf().setAppName("spark-asn1-datasource")
 val spark = SparkSession.builder().config(conf).master("local[*]").getOrCreate()
 val asn1DataFrame = spark.read.format("asn1V1")
       .option("schemaFileType","asn")
@@ -36,7 +37,7 @@ val asn1DataFrame = spark.read.format("asn1V1")
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.SparkConf
 
-val conf = new SparkConf().setAppName("spark-custom-datasource")
+val conf = new SparkConf().setAppName("spark-asn1-datasource")
 val spark = SparkSession.builder().config(conf).master("local[*]").getOrCreate()
 val asn1DataFrame = spark.read.format("asn1V1")
       .option("schemaFileType","json")
@@ -51,7 +52,7 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.types.{StructType, StructField, StringType, IntegerType}
 
-val conf = new SparkConf().setAppName("spark-custom-datasource")
+val conf = new SparkConf().setAppName("spark-asn1-datasource")
 val spark = SparkSession.builder().config(conf).master("local[*]").getOrCreate()
 val schema = StructType(
       StructField("recordNumber", IntegerType, false) ::
@@ -89,7 +90,7 @@ After creating your Custom Decoder use the customDecoder feature to integrate it
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.SparkConf
 
-val conf = new SparkConf().setAppName("spark-custom-datasource")
+val conf = new SparkConf().setAppName("spark-asn1-datasource")
 val spark = SparkSession.builder().config(conf).master("local[*]").getOrCreate()
 val asn1DataFrame = spark.read.format("asn1V1")
       .option("schemaFileType","asn")
@@ -112,6 +113,7 @@ import hadoopIO.AsnInputFormat
 
 val spark = SparkSession.builder().master("local[*]").getOrCreate()
 val conf: Configuration = new Configuration(spark.sparkContext.hadoopConfiguration)
+conf.set("precisionFactor","5")
 val records = spark.sparkContext
                        .newAPIHadoopFile(
                        "src/test/resources/simpleTypes.ber", 
