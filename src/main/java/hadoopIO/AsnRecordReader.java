@@ -32,7 +32,7 @@ public class AsnRecordReader extends RecordReader<LongWritable, Text> {
         currentKey.set(currentPosition);
         currentValue.clear();
         int currentRecordSize = 0;
-        long tempRecordSize = Integer.MAX_VALUE;
+        long tempRecordSize = blockEndPosition;
         while (currentPosition < blockEndPosition) {
             int localPosition = 0;
             int recordByte = 0;
@@ -57,7 +57,7 @@ public class AsnRecordReader extends RecordReader<LongWritable, Text> {
             }
             currentPosition = tempRecordSize;
         }
-        if (currentPosition != blockEndPosition && tempRecordSize != Integer.MAX_VALUE) {
+        if (currentPosition != blockEndPosition && tempRecordSize != blockEndPosition) {
             int i;
             while (fileSystemInputStream.getPos() < tempRecordSize) {
                 i = fileSystemInputStream.readByte();
@@ -120,10 +120,10 @@ public class AsnRecordReader extends RecordReader<LongWritable, Text> {
     }
 
 
-    public int findRecordStart(FSDataInputStream fileSystemInputStream, long blockStartPosition, long blockEndPosition, int precisionFactor) throws IOException {
+    public long findRecordStart(FSDataInputStream fileSystemInputStream, long blockStartPosition, long blockEndPosition, int precisionFactor) throws IOException {
 
-        int position = 0;
-        for (position = (int) blockStartPosition; position < blockEndPosition; position++) {
+        long position = 0;
+        for (position = (long ) blockStartPosition; position < blockEndPosition; position++) {
             fileSystemInputStream.seek(position);
             int startByte = fileSystemInputStream.readByte();
             if (startByte == tagByte) {
