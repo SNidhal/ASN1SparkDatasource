@@ -1,6 +1,6 @@
 package asn1V1
 
-import customDecoding.DynamicObjectLoader
+import customDecoding.DynamicScalaDecoderObjectLoader
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{LongWritable, Text}
 import org.apache.spark.rdd.RDD
@@ -8,17 +8,19 @@ import org.apache.spark.sql.sources._
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.{Row, SQLContext}
 import util.Util
-import hadoopIO.RawFileAsBinaryInputFormat
+import hadoopIO.AsnInputFormat
 import reader.{AsnSchemaParser, JsonSchemaParser}
 
 case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFileType: String, path: String
                                   , userSchema: StructType, schemaFilePath: String, customDecoder: String
-                                  , customDecoderLanguage: String)
+                                  , customDecoderLanguage: String, precisionFactor: String, mainTag: String)
   extends BaseRelation with TableScan with PrunedScan with Serializable {
 
 
   var currentSchema: StructType = _
   var initialSchema: StructType = _
+  var tagNumber: Int = _
+  var tagByte: String = _
 
   {
     if (userSchema != null) {
@@ -29,6 +31,12 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
       currentSchema = StructType(Asn1Parser.flatten(initialSchema))
 
     }
+
+    if (mainTag.equals("sequence")) {
+      tagNumber = 16
+      tagByte = "48"
+    }
+
   }
 
 
@@ -38,10 +46,10 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
   override def buildScan(): RDD[Row] = {
     val conf: Configuration = new Configuration(sqlContext.sparkContext.hadoopConfiguration)
     val FileRDD: RDD[(LongWritable, Text)] = sqlContext.sparkContext
-      .newAPIHadoopFile(path, classOf[RawFileAsBinaryInputFormat], classOf[LongWritable], classOf[Text], conf)
+      .newAPIHadoopFile(path, classOf[AsnInputFormat], classOf[LongWritable], classOf[Text], conf)
     val encodedRecordsRDD: RDD[Text] = FileRDD.map(x => x._2)
     val decodedRecordsRDD = encodedRecordsRDD.map((encodedLine: Text) => {
-      Asn1Parser.decodeRecord(encodedLine, currentSchema, true)
+      Asn1Parser.decodeRecord(encodedLine, currentSchema, true, tagNumber)
     })
     decodedRecordsRDD.map(s => Row.fromSeq(s))
   }
@@ -49,13 +57,15 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
 
   override def buildScan(requiredColumns: Array[String]): RDD[Row] = {
     val conf: Configuration = new Configuration(sqlContext.sparkContext.hadoopConfiguration)
+    conf.set("precisionFactor", precisionFactor)
+    conf.set("tagByte", tagByte.toString)
     val FileRDD: RDD[(LongWritable, Text)] = sqlContext.sparkContext
-      .newAPIHadoopFile(path, classOf[RawFileAsBinaryInputFormat], classOf[LongWritable], classOf[Text], conf)
+      .newAPIHadoopFile(path, classOf[AsnInputFormat], classOf[LongWritable], classOf[Text], conf)
     val encodedLinesRDD: RDD[Text] = FileRDD.map(x => x._2)
     val decodedLinesRDD = encodedLinesRDD.map(encodedLine => {
       if (customDecoder.equals("none")) {
         try {
-          Asn1Parser.decodeRecord(encodedLine, initialSchema, true)
+          Asn1Parser.decodeRecord(encodedLine, initialSchema, true, tagNumber)
         }
         catch {
           case _: Exception => Seq()
@@ -63,10 +73,10 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
       } else {
         if (customDecoderLanguage.equals("java")) {
           val customDecoderClassInstance = Class.forName(customDecoder).newInstance
-          val decodeMethod = customDecoderClassInstance.getClass.getMethod("decode", encodedLine.getClass,initialSchema.getClass)
-          decodeMethod.invoke(customDecoderClassInstance, encodedLine,initialSchema).asInstanceOf[Seq[Any]]
+          val decodeMethod = customDecoderClassInstance.getClass.getMethod("decode", encodedLine.getClass, initialSchema.getClass)
+          decodeMethod.invoke(customDecoderClassInstance, encodedLine, initialSchema).asInstanceOf[Seq[Any]]
         } else {
-          DynamicObjectLoader.getObject(customDecoder).decode(encodedLine, initialSchema)
+          DynamicScalaDecoderObjectLoader.getDecoderObject(customDecoder).decode(encodedLine, initialSchema)
         }
       }
     })

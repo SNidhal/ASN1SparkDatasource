@@ -61,7 +61,7 @@ object CustomScalaDecoder extends ScalaDecoder {
           sequence = sequence :+ Seq(Util.castTo(floatValue.toString, field.dataType))
 
         case struct: StructType =>
-          sequence = sequence :+ decodeNestedRecord(lineInputStream, struct, false)
+          sequence = sequence :+ decodeNestedRecord(lineInputStream, struct, false,16)
       }
     })
     sequence.flatten
