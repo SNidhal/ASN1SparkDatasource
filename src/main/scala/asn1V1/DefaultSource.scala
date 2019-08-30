@@ -11,26 +11,27 @@ class DefaultSource extends RelationProvider with SchemaRelationProvider {
   }
 
   override def createRelation(sqlContext: SQLContext, parameters: Map[String, String], schema: StructType): BaseRelation = {
-    val path = parameters.get("path")
-    val schemaFilePath = parameters.get("schemaFilePath")
-    val schemaFileType = parameters.get("schemaFileType")
-    val customDecoder = parameters.get("customDecoder")
-    val customDecoderLanguage = parameters.get("customDecoderLanguage")
+    val path = parameters.getOrElse("path", sys.error("'path' must be specified for ASN.1(Ber/Der) data."))
+    val schemaFilePath = parameters.getOrElse("schemaFilePath", sys.error("path of the schema file must be specified."))
+    val schemaFileType = parameters.getOrElse("schemaFileType", sys.error("type of the schema file must be specified."))
+    val customDecoder = parameters.getOrElse("customDecoder", "none")
+    val precisionFactor = parameters.getOrElse("precisionFactor", "5")
+    val mainTag = parameters.getOrElse("mainTag", "sequence")
+    val customDecoderLanguage = parameters.getOrElse("customDecoderLanguage", "none")
 
-    path match {
-      case Some(p) => {
-        customDecoder match {
-          case Some(cd) => {
-            customDecoderLanguage match {
-              case Some(cdl) => ASN1DatasourceRelation(sqlContext, schemaFileType.get, p, schema, schemaFilePath.get, cd, cdl)
-              case _ => throw new IllegalArgumentException("custom decoder source language is required")
-            }
-          }
-          case _ => ASN1DatasourceRelation(sqlContext, schemaFileType.get, p, schema, schemaFilePath.get, "none","none")
-        }
-      }
-      case _ => throw new IllegalArgumentException("Path is required for asn.1 datasource format!!")
-    }
+    if (customDecoder.equals("none") ^ customDecoderLanguage.equals("none"))
+      sys.error("if you are using custom decoder both 'customDecoder' and 'customDecoderLanguage' must be specified.")
+
+    ASN1DatasourceRelation(
+      sqlContext,
+      schemaFileType,
+      path,
+      schema,
+      schemaFilePath,
+      customDecoder,
+      customDecoderLanguage,
+      precisionFactor,
+      mainTag)
   }
 
 }

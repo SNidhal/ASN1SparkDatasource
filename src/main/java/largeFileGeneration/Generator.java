@@ -9,7 +9,7 @@ public class Generator {
 
     public static void generateFile(String outputPath,long recordNumber) throws IOException {
 
-        File baseFile = new File("src/main/java/largeFileGeneration/baseFile.ber");
+        File baseFile = new File("src/main/resources/baseFile.ber");
         File destinationFile = new File(outputPath);
         destinationFile.createNewFile();
         byte[] fileContent = Files.readAllBytes(baseFile.toPath());
