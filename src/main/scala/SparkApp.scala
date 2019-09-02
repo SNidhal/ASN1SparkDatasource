@@ -16,7 +16,10 @@ object SparkApp {
 
     val as1DataFrame = spark.read.format("asn1V1")
       .option("schemaFileType","asn")
+      .option("mainTag","sequence")
       .option("schemaFilePath", "src/test/resources/simpleTypes.asn")
+      .option("customDecoder","util.CustomJavaDecoder")
+      .option("customDecoderLanguage","java")
       .load("src/test/resources/simpleTypes.ber")
 
 

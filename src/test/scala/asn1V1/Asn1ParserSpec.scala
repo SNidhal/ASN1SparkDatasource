@@ -32,7 +32,7 @@ class Asn1ParserSpec extends FlatSpec with GivenWhenThen with Matchers {
 
     When("decodeRecord is invoked")
 
-    val recordSequence = Asn1Parser.decodeRecord(record, schema,true)
+    val recordSequence = Asn1Parser.decodeRecord(record, schema,true,16)
 
     Then("a sequence of the record decoded fields should be returned")
 
