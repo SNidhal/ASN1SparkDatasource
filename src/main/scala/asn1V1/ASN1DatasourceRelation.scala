@@ -11,6 +11,7 @@ import util.Util
 import hadoopIO.AsnInputFormat
 import reader.{AsnSchemaParser, JsonSchemaParser}
 
+
 case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFileType: String, path: String
                                   , userSchema: StructType, schemaFilePath: String, customDecoder: String
                                   , customDecoderLanguage: String, precisionFactor: String, mainTag: String)
@@ -29,12 +30,16 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
     } else {
       initialSchema = inferSchema(schemaFilePath)
       currentSchema = StructType(Asn1Parser.flatten(initialSchema))
-
     }
 
     if (mainTag.equals("sequence")) {
       tagNumber = 16
       tagByte = "48"
+    } else if (mainTag.equals("set")) {
+      tagNumber = 17
+      tagByte = "48"
+    } else {
+      throw new IllegalArgumentException("Illegal tag '" + mainTag + "'")
     }
 
   }
@@ -68,21 +73,26 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
           Asn1Parser.decodeRecord(encodedLine, initialSchema, true, tagNumber)
         }
         catch {
-          case _: Exception => Seq()
+          case _: Exception => {
+            Seq()
+          }
         }
       } else {
         if (customDecoderLanguage.equals("java")) {
           val customDecoderClassInstance = Class.forName(customDecoder).newInstance
           val decodeMethod = customDecoderClassInstance.getClass.getMethod("decode", encodedLine.getClass, initialSchema.getClass)
           decodeMethod.invoke(customDecoderClassInstance, encodedLine, initialSchema).asInstanceOf[Seq[Any]]
-        } else {
+        } else if (customDecoderLanguage.equals("scala")) {
           DynamicScalaDecoderObjectLoader.getDecoderObject(customDecoder).decode(encodedLine, initialSchema)
+        } else {
+          throw new IllegalArgumentException("Illegal decoder language '" + customDecoderLanguage + "'")
         }
       }
     })
     val filteredDecodedLinesRDD = decodedLinesRDD
       .map(s => Util.rearrangeSequence(requiredColumns, s, currentSchema))
       .map(s => s.filter(_ != " "))
+      .filter(!_.isEmpty)
       .map(s => Row.fromSeq(s))
     filteredDecodedLinesRDD
   }
@@ -93,6 +103,8 @@ case class ASN1DatasourceRelation(override val sqlContext: SQLContext, schemaFil
       inferredSchema = AsnSchemaParser.getParsedSchema(path)
     } else if (schemaFileType == "json") {
       inferredSchema = JsonSchemaParser.JsonSourceFileToStructType(path)
+    } else {
+      throw new IllegalArgumentException("Illegal schema file extension '" + schemaFileType + "'")
     }
     inferredSchema
   }

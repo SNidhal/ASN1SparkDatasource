@@ -78,29 +78,11 @@ public class BerClassWriter {
                     "abstract", "package", "import", "null", "code", "getClass", "setClass")));
 
     private TagDefault tagDefault;
-    private File outputBaseDir;
-    private final String basePackageName;
-    private int indentNum = 0;
 
-    private final boolean supportIndefiniteLength;
-    private final boolean jaxbMode;
     private final HashMap<String, AsnModule> modulesByName;
     private AsnModule module;
-    private File outputDirectory;
 
-    BerClassWriter(HashMap<String, AsnModule> modulesByName, String outputBaseDir, String basePackageName,
-                   boolean jaxbMode, boolean supportIndefiniteLength) throws IOException {
-        this.supportIndefiniteLength = supportIndefiniteLength;
-        this.jaxbMode = jaxbMode;
-        this.outputBaseDir = new File(outputBaseDir);
-
-        if (basePackageName.isEmpty()) {
-            this.basePackageName = "";
-        }
-        else {
-            this.outputBaseDir = new File(this.outputBaseDir, basePackageName.replace('.', '/'));
-            this.basePackageName = basePackageName + ".";
-        }
+    BerClassWriter(HashMap<String, AsnModule> modulesByName) {
         this.modulesByName = modulesByName;
     }
 
@@ -120,17 +102,7 @@ public class BerClassWriter {
 
     }
 
-    int[] toIntArray(List<Integer> list) {
-        int[] ret = new int[list.size()];
-        for (int i = 0; i < ret.length; i++) {
-            ret[i] = list.get(i);
-        }
-        return ret;
-    }
-
     public void translateModule(AsnModule module) throws IOException {
-
-
         this.module = module;
         tagDefault = module.tagDefault;
 
@@ -151,7 +123,6 @@ public class BerClassWriter {
                 Tag tag = getTag(asnTaggedType);
 
                 if (asnTaggedType.definedType != null) {
-                    writeRetaggingTypeClass(typeName, asnTaggedType.definedType.typeName, typeDefinition, tag);
                 }
                 else {
 
@@ -161,19 +132,14 @@ public class BerClassWriter {
                         writeConstructedTypeClass(typeName, assignedAsnType, tag, false, null,false);
                     }
                     else {
-                        writeRetaggingTypeClass(typeName, getBerType(assignedAsnType), typeDefinition, tag);
                     }
                 }
 
-            }
-            else if (typeDefinition instanceof AsnDefinedType) {
-                writeRetaggingTypeClass(typeName, ((AsnDefinedType) typeDefinition).typeName, typeDefinition, null);
             }
             else if (typeDefinition instanceof AsnConstructedType) {
                 writeConstructedTypeClass(typeName, typeDefinition, null, false, null,false);
             }
             else {
-                writeRetaggingTypeClass(typeName, getBerType(typeDefinition), typeDefinition, null);
             }
 
         }
@@ -321,7 +287,7 @@ public class BerClassWriter {
             writeSequenceOrSetClass(className, (AsnSequenceSet) asnType, tag, isStaticStr, listOfSubClassNames,nested);
         }
         else if (asnType instanceof AsnSequenceOf) {
-            writeSequenceOfClass(className, (AsnSequenceOf) asnType, tag, isStaticStr, listOfSubClassNames);
+            writeSequenceOfClass((AsnSequenceOf) asnType, listOfSubClassNames);
         }
         else if (asnType instanceof AsnChoice) {
             writeChoiceClass(className, (AsnChoice) asnType, tag, isStaticStr, listOfSubClassNames);
@@ -331,16 +297,6 @@ public class BerClassWriter {
     private void writeChoiceClass(String className, AsnChoice asn1TypeElement, Tag tag, String isStaticStr,
                                   List<String> listOfSubClassNames) throws IOException {
 
-        write("public" + isStaticStr + " class " + className + " implements Serializable {\n");
-
-        write("private static final long serialVersionUID = 1L;\n");
-
-        write("public byte[] code = null;");
-
-        if (tag != null) {
-            write("public static final BerTag tag = new BerTag(" + getBerTagParametersString(tag) + ");\n");
-
-        }
 
         List<AsnElementType> componentTypes = asn1TypeElement.componentTypes;
 
@@ -370,17 +326,6 @@ public class BerClassWriter {
         setClassNamesOfComponents(listOfSubClassNames, componentTypes);
 
         writePublicMembers(componentTypes,false);
-
-        writeEmptyConstructor(className);
-
-
-
-        if (jaxbMode) {
-            writeGetterAndSetter(componentTypes);
-        }
-
-        write("}\n");
-
     }
 
 
@@ -438,7 +383,7 @@ public class BerClassWriter {
                             }
                         }
 
-                        return basePackageName + sanitizeModuleName(moduleName).replace('-', '.').toLowerCase() + "."
+                        return   sanitizeModuleName(moduleName).replace('-', '.').toLowerCase() + "."
                                 + cleanedUpClassName;
 
                     }
@@ -508,38 +453,11 @@ public class BerClassWriter {
 
         }
 
-        Tag mainTag;
-        if (tag == null) {
-            if (asnSequenceSet.isSequence) {
-                mainTag = stdSeqTag;
-            }
-            else {
-                mainTag = stdSetTag;
-            }
-        }
-        else {
-            mainTag = tag;
-        }
-
-        write("public static final BerTag tag = new BerTag(" + getBerTagParametersString(mainTag) + ");\n");
-
-        write("public byte[] code = null;");
 
         setClassNamesOfComponents(listOfSubClassNames, componentTypes);
 
         writePublicMembers(componentTypes,nested);
 
-        writeEmptyConstructor(className);
-
-
-
-        if (jaxbMode) {
-            writeGetterAndSetter(componentTypes);
-        }
-
-        boolean hasExplicitTag = (tag != null) && (tag.type == TagType.EXPLICIT);
-
-        write("}\n");
 
     }
 
@@ -562,12 +480,9 @@ public class BerClassWriter {
 
 
 
-    private void writeSequenceOfClass(String className, AsnSequenceOf asnSequenceOf, Tag tag, String isStaticStr,
+    private void writeSequenceOfClass( AsnSequenceOf asnSequenceOf,
                                       List<String> listOfSubClassNames) throws IOException {
 
-        write("public" + isStaticStr + " class " + className + " implements Serializable {\n");
-
-        write("private static final long serialVersionUID = 1L;\n");
 
         AsnElementType componentType = asnSequenceOf.componentType;
 
@@ -577,186 +492,7 @@ public class BerClassWriter {
             writeConstructedTypeClass(referencedTypeName, componentType.typeReference, null, true, listOfSubClassNames,true);
         }
 
-        Tag mainTag;
-        if (tag == null) {
-            if (asnSequenceOf.isSequenceOf) {
-                mainTag = stdSeqTag;
-            }
-            else {
-                mainTag = stdSetTag;
-            }
-        }
-        else {
-            mainTag = tag;
-        }
-
-        write("public static final BerTag tag = new BerTag(" + getBerTagParametersString(mainTag) + ");");
-
-        write("public byte[] code = null;");
-
-        if (jaxbMode) {
-            write("private List<" + referencedTypeName + "> seqOf = null;\n");
-        }
-        else {
-            write("public List<" + referencedTypeName + "> seqOf = null;\n");
-        }
-
-        write("public " + className + "() {");
-        write("seqOf = new ArrayList<" + referencedTypeName + ">();");
-        write("}\n");
-
-        write("public " + className + "(byte[] code) {");
-        write("this.code = code;");
-        write("}\n");
-
-        if (!jaxbMode) {
-            write("public " + className + "(List<" + referencedTypeName + "> seqOf) {");
-            write("this.seqOf = seqOf;");
-            write("}\n");
-        }
-
-        if (jaxbMode) {
-            writeGetterForSeqOf(referencedTypeName);
-        }
-
-        boolean hasExplicitTag = (tag != null) && (tag.type == TagType.EXPLICIT);
-
-        write("}\n");
-
     }
-
-    private void writeRetaggingTypeClass(String typeName, String assignedTypeName, AsnType typeDefinition, Tag tag)
-            throws IOException {
-
-        write("public class " + typeName + " extends " + cleanUpName(assignedTypeName) + " {\n");
-
-        write("private static final long serialVersionUID = 1L;\n");
-
-        if (tag != null) {
-
-            write("public static final BerTag tag = new BerTag(" + getBerTagParametersString(tag) + ");\n");
-
-            if (tag.type == TagType.EXPLICIT) {
-                write("public byte[] code = null;\n");
-            }
-        }
-
-        write("public " + typeName + "() {");
-        write("}\n");
-
-        String[] constructorParameters = getConstructorParameters(getUniversalType(typeDefinition));
-
-        if (constructorParameters.length != 2 || constructorParameters[0] != "byte[]") {
-            write("public " + typeName + "(byte[] code) {");
-            write("super(code);");
-            write("}\n");
-        }
-
-        if ((!jaxbMode || isPrimitiveOrRetaggedPrimitive(typeDefinition)) && (constructorParameters.length != 0)) {
-            String constructorParameterString = "";
-            String superCallParameterString = "";
-            for (int i = 0; i < constructorParameters.length; i += 2) {
-                if (i > 0) {
-                    constructorParameterString += ", ";
-                    superCallParameterString += ", ";
-                }
-                constructorParameterString += constructorParameters[i] + " " + constructorParameters[i + 1];
-                superCallParameterString += constructorParameters[i + 1];
-            }
-
-            write("public " + typeName + "(" + constructorParameterString + ") {");
-            write("super(" + superCallParameterString + ");");
-            write("}\n");
-
-            if (constructorParameters[0].equals("BigInteger")) {
-                write("public " + typeName + "(long value) {");
-                write("super(value);");
-                write("}\n");
-            }
-
-        }
-
-        if (tag != null) {
-
-
-
-            write("public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {\n");
-
-            if (constructorParameters.length != 2 || constructorParameters[0] != "byte[]") {
-                write("if (code != null) {");
-                write("for (int i = code.length - 1; i >= 0; i--) {");
-                write("os.write(code[i]);");
-                write("}");
-                write("if (withTag) {");
-                write("return tag.encode(os) + code.length;");
-                write("}");
-                write("return code.length;");
-                write("}\n");
-            }
-
-            write("int codeLength;\n");
-
-            if (tag.type == TagType.EXPLICIT) {
-                if (isDirectAnyOrChoice((AsnTaggedType) typeDefinition)) {
-                    write("codeLength = super.encode(os);");
-                }
-                else {
-                    write("codeLength = super.encode(os, true);");
-                }
-                write("codeLength += BerLength.encodeLength(os, codeLength);");
-            }
-            else {
-                write("codeLength = super.encode(os, false);");
-            }
-
-            write("if (withTag) {");
-            write("codeLength += tag.encode(os);");
-            write("}\n");
-
-            write("return codeLength;");
-            write("}\n");
-
-
-
-            write("public int decode(InputStream is, boolean withTag) throws IOException {\n");
-
-            write("int codeLength = 0;\n");
-
-            write("if (withTag) {");
-            write("codeLength += tag.decodeAndCheck(is);");
-            write("}\n");
-
-            if (tag.type == TagType.EXPLICIT) {
-
-                write("BerLength length = new BerLength();");
-                write("codeLength += length.decode(is);\n");
-
-                if (isDirectAnyOrChoice((AsnTaggedType) typeDefinition)) {
-                    write("codeLength += super.decode(is, null);\n");
-                }
-                else {
-                    write("codeLength += super.decode(is, true);\n");
-                }
-            }
-            else {
-                write("codeLength += super.decode(is, false);\n");
-            }
-
-            write("return codeLength;");
-            write("}\n");
-        }
-
-        write("}");
-
-    }
-
-
-    private static String getBerTagParametersString(Tag tag) {
-        return "BerTag." + tag.tagClass + "_CLASS, BerTag." + tag.typeStructure.toString() + ", " + tag.value;
-    }
-
-
-
 
     private void addAutomaticTagsIfNeeded(List<AsnElementType> componentTypes) throws IOException {
         if (tagDefault != TagDefault.AUTOMATIC) {
@@ -782,16 +518,6 @@ public class BerClassWriter {
         return (tag != null) && (tag.type == TagType.EXPLICIT);
     }
 
-
-
-    private void writeEmptyConstructor(String className) throws IOException {
-        write("public " + className + "() {");
-        write("}\n");
-
-        write("public " + className + "(byte[] code) {");
-        write("this.code = code;");
-        write("}\n");
-    }
 
     private void writePublicMembers(List<AsnElementType> componentTypes,boolean nested) throws IOException {
 
@@ -862,30 +588,6 @@ public class BerClassWriter {
         return element.typeReference != null && (element.typeReference instanceof AsnConstructedType);
     }
 
-    private void writeGetterAndSetter(List<AsnElementType> componentTypes) throws IOException {
-        for (AsnElementType element : componentTypes) {
-            String typeName = getClassNameOfComponent(element);
-            String getterName = cleanUpName("get" + capitalizeFirstCharacter(element.name));
-            String setterName = cleanUpName("set" + capitalizeFirstCharacter(element.name));
-            String variableName = cleanUpName(element.name);
-            write("public void " + setterName + "(" + typeName + " " + variableName + ") {");
-            write("this." + variableName + " = " + variableName + ";");
-            write("}\n");
-            write("public " + typeName + " " + getterName + "() {");
-            write("return " + variableName + ";");
-            write("}\n");
-        }
-    }
-
-    private void writeGetterForSeqOf(String referencedTypeName) throws IOException {
-        write("public List<" + referencedTypeName + "> get"
-                + referencedTypeName.substring(referencedTypeName.lastIndexOf('.') + 1) + "() {");
-        write("if (seqOf == null) {");
-        write("seqOf = new ArrayList<" + referencedTypeName + ">();");
-        write("}");
-        write("return seqOf;");
-        write("}\n");
-    }
 
     private String getClassNameOfSequenceOfElement(AsnElementType componentType, List<String> listOfSubClassNames)
             throws IOException {
@@ -901,7 +603,7 @@ public class BerClassWriter {
                     }
                 }
 
-                return basePackageName + sanitizeModuleName(moduleName).replace('-', '.').toLowerCase() + "."
+                return  sanitizeModuleName(moduleName).replace('-', '.').toLowerCase() + "."
                         + classNameOfSequenceElement;
             }
         }
@@ -980,74 +682,6 @@ public class BerClassWriter {
             return ((AsnCharacterString) asnType).stringtype;
         }
         return className.substring(3);
-    }
-
-    private String[] getConstructorParameters(AsnUniversalType typeDefinition) throws IOException {
-
-        if (typeDefinition instanceof AsnInteger || typeDefinition instanceof AsnEnum) {
-            return new String[] { "BigInteger", "value" };
-        }
-        else if (typeDefinition instanceof AsnReal) {
-            return new String[] { "double", "value" };
-        }
-        else if (typeDefinition instanceof AsnBoolean) {
-            return new String[] { "boolean", "value" };
-        }
-        else if (typeDefinition instanceof AsnObjectIdentifier) {
-            return new String[] { "int[]", "value" };
-        }
-        else if (typeDefinition instanceof AsnBitString) {
-            return new String[] { "byte[]", "value", "int", "numBits" };
-        }
-        else if (typeDefinition instanceof AsnOctetString || typeDefinition instanceof AsnCharacterString) {
-            return new String[] { "byte[]", "value" };
-        }
-        else if (typeDefinition instanceof AsnNull) {
-            return new String[0];
-        }
-        else if ((typeDefinition instanceof AsnSequenceSet) || (typeDefinition instanceof AsnChoice)) {
-            return getConstructorParametersFromConstructedElement((AsnConstructedType) typeDefinition);
-        }
-        else if (typeDefinition instanceof AsnSequenceOf) {
-            return new String[] {
-                    "List<" + getClassNameOfSequenceOfElement(((AsnSequenceOf) typeDefinition).componentType) + ">",
-                    "seqOf" };
-        }
-        else if (typeDefinition instanceof AsnAny) {
-            return new String[] { "byte[]", "value" };
-        }
-        else if (typeDefinition instanceof AsnEmbeddedPdv) {
-            return new String[0];
-        }
-        else {
-            throw new IllegalStateException("type of unknown class: " + typeDefinition.name);
-        }
-
-    }
-
-    private String[] getConstructorParametersFromConstructedElement(AsnConstructedType assignedTypeDefinition)
-            throws IOException {
-
-        List<AsnElementType> componentTypes;
-
-        if (assignedTypeDefinition instanceof AsnSequenceSet) {
-
-            componentTypes = ((AsnSequenceSet) assignedTypeDefinition).componentTypes;
-        }
-        else {
-            componentTypes = ((AsnChoice) assignedTypeDefinition).componentTypes;
-        }
-
-        String[] constructorParameters = new String[componentTypes.size() * 2];
-
-        for (int j = 0; j < componentTypes.size(); j++) {
-            AsnElementType componentType = componentTypes.get(j);
-
-            constructorParameters[j * 2] = getClassNameOfComponent(componentType);
-            constructorParameters[j * 2 + 1] = cleanUpName(componentType.name);
-
-        }
-        return constructorParameters;
     }
 
     private AsnType followAndGetNextTaggedOrUniversalType(AsnType asnType, AsnModule module) throws CompileException {
@@ -1158,17 +792,7 @@ public class BerClassWriter {
         return isPrimitive((AsnUniversalType) asnType);
     }
 
-    private boolean isPrimitiveOrRetaggedPrimitive(AsnType asnType) throws IOException {
-        return isPrimitive(getUniversalType(asnType));
-    }
-
     private boolean isPrimitive(AsnUniversalType asnType) {
         return !(asnType instanceof AsnConstructedType || asnType instanceof AsnEmbeddedPdv);
     }
-
-
-    private void write(String line) throws IOException {
-
-    }
-
 }
