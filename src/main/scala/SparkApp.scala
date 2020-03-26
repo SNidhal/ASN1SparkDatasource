@@ -13,8 +13,8 @@ object SparkApp {
 
     val as1DataFrame = spark.read.format("asn1V1")
       .option("schemaFileType","asn")
-      .option("schemaFilePath","simpleTypesLarge.asn")
-      .load("x2.ber")
+      .option("schemaFilePath","src/test/resources/simpleTypes.asn")
+      .load("src/test/resources/simpleTypes.ber")
 
 
 
