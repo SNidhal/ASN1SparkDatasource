@@ -70,10 +70,6 @@ public class Compiler {
             System.exit(1);
         }
 
-        if (supportIndefiniteLength.isSelected()) {
-            System.out.println("Java classes will support decoding indefinite length.");
-        }
-
         HashMap<String, AsnModule> modulesByName = new HashMap<>();
 
         for (String asn1File : asn1Files.getValue()) {
@@ -81,8 +77,7 @@ public class Compiler {
             modulesByName.putAll(model.modulesByName);
         }
 
-        BerClassWriter classWriter = new BerClassWriter(modulesByName, outputBaseDir.getValue(),
-                basePackageName.getValue(), !legacyMode.isSelected(), supportIndefiniteLength.isSelected());
+        BerClassWriter classWriter = new BerClassWriter(modulesByName);
 
         classWriter.translate();
 

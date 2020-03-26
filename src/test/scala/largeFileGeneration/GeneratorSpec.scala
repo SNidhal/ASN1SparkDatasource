@@ -10,7 +10,7 @@ class GeneratorSpec extends FlatSpec with GivenWhenThen with Matchers{
     Given("a destination path and the number of records wanted")
 
     val destinationPath = "testgen2.ber"
-    val recordNumber = 99
+    val recordNumber = 1900000
 
     When("generateFile is invoked")
 
