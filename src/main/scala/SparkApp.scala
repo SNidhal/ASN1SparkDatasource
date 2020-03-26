@@ -1,37 +1,31 @@
 import org.apache.spark.SparkConf
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{SaveMode, SparkSession}
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 
 object SparkApp {
 
   def main(args: Array[String]): Unit = {
 
-    val asnFilePath = args(0)
-    val master = args(1)
-
     val conf = new SparkConf().setAppName("spark-custom-datasource")
-    val spark = SparkSession.builder().config(conf).master(master).getOrCreate()
+    val spark = SparkSession.builder().config(conf).master("local[*]").getOrCreate()
 
 
 
     val as1DataFrame = spark.read.format("asn1V1")
       .option("schemaFileType","asn")
-      .option("mainTag","sequence")
-      .option("schemaFilePath", "src/test/resources/simpleTypes.asn")
-      .option("customDecoder","util.CustomJavaDecoder")
-      .option("customDecoderLanguage","java")
-      .load("src/test/resources/simpleTypes.ber")
+      .option("schemaFilePath","simpleTypesLarge.asn")
+      .load("x2.ber")
 
 
-    as1DataFrame.printSchema()
 
     as1DataFrame.createOrReplaceTempView("test")
     spark.sql("select * from test").show()
 
-    println(spark.sql("select * from test").count()+" records")
-    println(as1DataFrame.rdd.partitions.length + "  partitions")
 
-    Thread.sleep(100000000)
+
+    as1DataFrame.write.mode(SaveMode.Overwrite).parquet("/user/nidhal/test")
+
+    Thread.sleep(111111111)
 
   }
 }
